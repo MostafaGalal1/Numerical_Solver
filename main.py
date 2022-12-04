@@ -44,7 +44,6 @@ class MainWindow(qtw.QWidget):
                     eva = list(ast.literal_eval(coff[i]))
                     a.append(eva[0:len(eva)-1])
                     b.append(eva[len(eva)-1])
-                    print(eva, a[n], b[n])
                     n += 1
                     if n == 1:
                         row_size = len(a[0])
@@ -55,8 +54,6 @@ class MainWindow(qtw.QWidget):
                 except:
                     continue
 
-            print(row_size, n)
-
             if n < row_size:
                 label.setText(f"The number of rows({n}) should be one less than the number of columns({row_size + 1})")
                 return
@@ -64,9 +61,11 @@ class MainWindow(qtw.QWidget):
                 label.setText(f"Matrix size must be {row_size + 1}x{row_size + 2}")
                 return
 
-            print(a)
-            print(b)
-            gauss_jordan(n, a, b)
+            if combobox.currentText() == "gauss elimination":
+                gauss_elimination(n, a, b)
+            elif combobox.currentText() == "gauss-jordan":
+                gauss_jordan(n, a, b)
+
             s = "\n".join(str(" ".join(str(itt) for itt in a[it])) + " " + str(b[it]) for it in range(n))
             label.setText(s)
 
@@ -109,7 +108,7 @@ class MainWindow(qtw.QWidget):
             forward_elimination(n, a, b)
             backward_elimination(n, a, b)
             for i in range(n):
-                print(b[i] / a[i][i])
+                print(b[i])
 
 
 app = qtw.QApplication([])
