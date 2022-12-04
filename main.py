@@ -14,7 +14,7 @@ class MainWindow(qtw.QWidget):
         label = qtw.QLabel("")
         label.setFont(qtg.QFont("Helvetica", 18))
 
-        button = qtw.QPushButton("press", clicked=lambda: press_it())
+        button = qtw.QPushButton("Solve", clicked=lambda: solve_it())
 
         combobox = qtw.QComboBox()
         combobox.addItems(['gauss elimination', 'gauss-jordan', 'LU Decomposition', 'jacobi', 'gauss-seidel'])
@@ -30,7 +30,7 @@ class MainWindow(qtw.QWidget):
 
         self.show()
 
-        def press_it():
+        def solve_it():
             coff = textbox.toPlainText().split('\n')
             if coff[0].find(',') == -1:
                 coff[0] += ','
@@ -87,7 +87,7 @@ class MainWindow(qtw.QWidget):
                     a[i][k] = 0
 
         def backward_substitution(n, a, b):
-            x = [0 for i in range(n)]
+            x = [0 for _ in range(n)]
 
             x[n - 1] = b[n - 1] / a[n - 1][n - 1]
             for i in range(n - 2, -1, -1):
