@@ -1,4 +1,4 @@
-# Numerical_Solver
+# Numerical Solver
 
 ## Objective
 
