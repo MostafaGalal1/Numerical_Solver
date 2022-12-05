@@ -15,11 +15,11 @@ Application to solve a linear system of equation which takes input the system of
 ## Specification
 
 implemented interactive GUI application that does the following:
-  1. Accepts an inputfora system of linearequations:
-    * The equations can be of any format.
-    * The input validation should be bullet-proof.
-    * Number of variables must equal the number of equations.
-    * Coefficients must be numbers (0 or non-existing is allowed).
+  1. Accepts an input for a system of linear equations:
+     * The equations can be of any format.
+     * The input validation should be bullet-proof.
+     * Number of variables must equal the number of equations.
+     * Coefficients must be numbers (0 or non-existing is allowed).
     
 
   2. Chooseany of the previously mentioned methodsto solve the given equation via a drop-down list.
