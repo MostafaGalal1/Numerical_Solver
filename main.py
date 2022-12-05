@@ -7,10 +7,11 @@ import PyQt5.QtGui as qtg
 class MainWindow(qtw.QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Numerical Project")
+        self.setWindowTitle("Numerical Solver")
 
         self.setLayout(qtw.QVBoxLayout())
         self.setFixedWidth(600)
+        self.setWindowIcon(qtg.QIcon("Course_Icon_LinAlgebra.ico"))
 
         label = qtw.QLabel("")
         label.setFont(qtg.QFont("Helvetica", 12))
