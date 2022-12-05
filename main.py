@@ -134,23 +134,28 @@ class MainWindow(qtw.QWidget):
 
             return True
 
-        def backward_elimination(n, a, b):
+        def backward_elimination(n, a, b, o):
+            x = [0 for _ in range(n)]
+
             for k in range(n - 1, -1, -1):
                 b[k] = integer_check(b[k] / a[k][k])
                 a[k][k] = 1
                 for i in range(k - 1, -1, -1):
                     b[i] = integer_check(b[i] - a[i][k] * b[k])
                     a[i][k] = 0
+                x[o[k]] = b[k]
+
+            return x
 
         def backward_substitution(n, a, b, o):
             x = [0 for _ in range(n)]
 
             x[n - 1] = integer_check(b[n - 1] / a[n - 1][n - 1])
-            for i in range(n - 2, -1, -1):
+            for i in range(n - 1, -1, -1):
                 tot = 0
                 for j in range(i + 1, n):
                     tot = integer_check(tot + x[j] * a[i][j])
-                    x[o[i]] = integer_check((b[i] - tot) / a[i][i])
+                x[o[i]] = integer_check((b[i] - tot) / a[i][i])
 
             return x
 
@@ -168,9 +173,9 @@ class MainWindow(qtw.QWidget):
             o = [i for i in range(n)]
 
             if forward_elimination(n, a, b, o):
-                backward_elimination(n, a, b)
+                x = backward_elimination(n, a, b, o)
                 for i in range(n):
-                    print(b[i])
+                    print(x[i])
             else:
                 print("There is no solution")
 
