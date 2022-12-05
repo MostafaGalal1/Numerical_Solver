@@ -1,7 +1,10 @@
 import ast
-
 import PyQt5.QtWidgets as qtw
 import PyQt5.QtGui as qtg
+import ctypes
+
+myappid = "mycompany.myproduct.subproduct.version"
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 
 class MainWindow(qtw.QWidget):
