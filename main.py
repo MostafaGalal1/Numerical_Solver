@@ -10,6 +10,7 @@ class MainWindow(qtw.QWidget):
         self.setWindowTitle("Numerical Project")
 
         self.setLayout(qtw.QVBoxLayout())
+        self.setFixedWidth(600)
 
         label = qtw.QLabel("")
         label.setFont(qtg.QFont("Helvetica", 12))
@@ -17,13 +18,16 @@ class MainWindow(qtw.QWidget):
         scroll_area = qtw.QScrollArea()
         scroll_area.setWidget(label)
         scroll_area.setWidgetResizable(True)
-
         button = qtw.QPushButton("Solve", clicked=lambda: solve_it())
-        partial_check = qtw.QCheckBox()
 
         combobox = qtw.QComboBox()
         combobox.addItems(['gauss elimination', 'gauss-jordan', 'LU Decomposition', 'jacobi', 'gauss-seidel'])
         combobox.resize(150, 25)
+
+        none_pivoting_check = qtw.QRadioButton("None")
+        none_pivoting_check.setChecked(True)
+        partial_pivoting_check = qtw.QRadioButton("Partial pivoting")
+        complete_pivoting_check = qtw.QRadioButton("Complete pivoting")
 
         textbox = qtw.QPlainTextEdit()
         textbox.resize(300, 300)
@@ -31,7 +35,11 @@ class MainWindow(qtw.QWidget):
         self.layout().addWidget(combobox)
         self.layout().addWidget(textbox)
         self.layout().addWidget(button)
-        self.layout().addWidget(partial_check)
+
+        self.layout().addWidget(none_pivoting_check)
+        self.layout().addWidget(partial_pivoting_check)
+        self.layout().addWidget(complete_pivoting_check)
+
         self.layout().addWidget(scroll_area)
 
         self.show()
@@ -92,10 +100,29 @@ class MainWindow(qtw.QWidget):
             a[k], a[row] = a[row], a[k]
             b[k], b[row] = b[row], b[k]
 
-        def forward_elimination(n, a, b):
+        def complete_pivoting(n, a, b, k, o):
+            mx = abs(a[k][k])
+            row = k
+            col = k
+            for i in range(k, n):
+                for j in range(k, n):
+                    if mx < abs(a[i][j]):
+                        row = i
+                        col = j
+                        mx = abs(a[i][j])
+
+            a[k], a[row] = a[row], a[k]
+            b[k], b[row] = b[row], b[k]
+            o[k], o[col] = o[col], o[k]
+            for i in range(n):
+                a[i][k], a[i][col] = a[i][col], a[i][k]
+
+        def forward_elimination(n, a, b, o):
             for k in range(n):
-                if partial_check.isChecked():
+                if partial_pivoting_check.isChecked():
                     partial_pivoting(n, a, b, k)
+                elif complete_pivoting_check.isChecked():
+                    complete_pivoting(n, a, b, k, o)
                 if a[k][k] == 0:
                     return False
                 for i in range(k + 1, n):
@@ -115,7 +142,7 @@ class MainWindow(qtw.QWidget):
                     b[i] = integer_check(b[i] - a[i][k] * b[k])
                     a[i][k] = 0
 
-        def backward_substitution(n, a, b):
+        def backward_substitution(n, a, b, o):
             x = [0 for _ in range(n)]
 
             x[n - 1] = integer_check(b[n - 1] / a[n - 1][n - 1])
@@ -123,20 +150,24 @@ class MainWindow(qtw.QWidget):
                 tot = 0
                 for j in range(i + 1, n):
                     tot = integer_check(tot + x[j] * a[i][j])
-                    x[i] = integer_check((b[i] - tot) / a[i][i])
+                    x[o[i]] = integer_check((b[i] - tot) / a[i][i])
 
             return x
 
         def gauss_elimination(n, a, b):
-            if forward_elimination(n, a, b):
-                x = backward_substitution(n, a, b)
+            o = [i for i in range(n)]
+
+            if forward_elimination(n, a, b, o):
+                x = backward_substitution(n, a, b, o)
                 for i in range(n):
                     print(x[i])
             else:
                 print("There is no solution")
 
         def gauss_jordan(n, a, b):
-            if forward_elimination(n, a, b):
+            o = [i for i in range(n)]
+
+            if forward_elimination(n, a, b, o):
                 backward_elimination(n, a, b)
                 for i in range(n):
                     print(b[i])
