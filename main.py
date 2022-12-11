@@ -55,9 +55,9 @@ class MainWindow(qtw.QWidget):
 
         def solve_it():
             coff = textbox.toPlainText().split('\n')
+            initial = []
             if coff[0].find(',') == -1:
-                coff[0] += ','
-
+                initial = coff[0].split()
             n = 0
             a = []
             b = []
@@ -89,6 +89,9 @@ class MainWindow(qtw.QWidget):
                 gauss_elimination(n, a, b)
             elif combobox.currentText() == "gauss-jordan":
                 gauss_jordan(n, a, b)
+            elif combobox.currentText() == "gauss-seidel":
+                epsilon = 10**-9
+                gauss_seidel(n, a, b, initial, epsilon)
 
             s = "\n".join(str(" ".join(str(itt) for itt in a[it])) + " " + str(b[it]) for it in range(n))
             label.setText(s)
@@ -182,6 +185,39 @@ class MainWindow(qtw.QWidget):
                     print(x[i])
             else:
                 print("There is no solution")
+
+        def gauss_seidel(n, a, b, initial, epsilon):
+            max_iteration: int = 1000
+            approximate_relative_error = []
+            iterationNo = 0
+            temp = 0
+            if len(initial) == 0 or len(initial) != len(a[0]):
+                print("initial values will be equal to zeros")
+                initial = []
+                for i in range(0, n):
+                    initial.append(0)
+            for i in range(0, n):
+                approximate_relative_error.append(1)
+            while iterationNo < max_iteration:
+                x_old = initial.copy()
+                for i in range(0, n):
+                    for j in range(0, n):
+                        if i != j:
+                            temp = b[i] - a[i][j] * initial[j]
+                    temp /= a[i][i]
+                    approximate_relative_error[i] = (abs(temp - initial[i]) / abs(temp)) * 100
+                    initial[i] = temp
+                print("Iteration Number", iterationNo + 1)
+                print("X =", initial)
+                print("X old =", x_old)
+                print("ARE = ", approximate_relative_error)
+                counter = 0
+                for i in range(0, n):
+                    if abs(x_old[i] - initial[i]) < epsilon:
+                        counter += 1
+                if counter == len(initial):
+                    break
+                iterationNo += 1
 
 
 app = qtw.QApplication([])
