@@ -252,12 +252,19 @@ class Ui_MainWindow(object):
             gauss_elimination(self, n, a, b)
         elif self.main_combobox.currentText() == "gauss-jordan":
             gauss_jordan(self, n, a, b)
+        elif self.main_combobox.currentText() == "LU-decomposition":
+            if self.decomposition_combobox.currentText() == "doolittle form":
+                doolittle(self, n, a)
+            elif self.decomposition_combobox.currentText() == "crout form":
+                crout(self, n, a)
+            elif self.decomposition_combobox.currentText() == "cholesky form":
+                chelosky(self, n, a)
         elif self.main_combobox.currentText() == "jacobi":
             jacobi(self, n, a, b, initial, epsilon, 100)
         elif self.main_combobox.currentText() == "gauss-seidel":
             gauss_seidel(self, n, a, b, initial, epsilon, 100)
 
-        significant_figures = 3
+        significant_figures = 5
         s = "\n".join(str(" ".join(str(float(f'%.{significant_figures}g' % itt)) for itt in a[it])) + " " + str(b[it]) for it in range(n))
 
         self.result_label.setText(s)
@@ -302,20 +309,25 @@ def complete_pivoting(n, a, b, k, o):
         a[i][k], a[i][col] = a[i][col], a[i][k]
 
 
-def forward_elimination(self, n, a, b, o):
+def forward_elimination(self, n, a, b, o, decomposition):
     for k in range(n):
-        if self.partial_pivoting.isChecked():
-            partial_pivoting(n, a, b, k)
-        elif self.complete_pivoting.isChecked():
-            complete_pivoting(n, a, b, k, o)
-        if a[k][k] == 0:
-            return False
+        if not decomposition:
+            if self.partial_pivoting.isChecked():
+                partial_pivoting(n, a, b, k)
+            elif self.complete_pivoting.isChecked():
+                complete_pivoting(n, a, b, k, o)
+            if a[k][k] == 0:
+                return False
         for i in range(k + 1, n):
             mult = integer_check(a[i][k] / a[k][k])
-            a[i][k] = 0
+            if decomposition:
+                a[i][k] = mult
+            else:
+                a[i][k] = 0
             for j in range(k + 1, n):
                 a[i][j] = integer_check(a[i][j] - mult * a[k][j])
-            b[i] = integer_check(b[i] - mult * b[k])
+            if not decomposition:
+                b[i] = integer_check(b[i] - mult * b[k])
 
     return True
 
@@ -351,7 +363,7 @@ def gauss_elimination(self, n, a, b):
     self.runtime.set_start_time()
     o = [i for i in range(n)]
 
-    if forward_elimination(self, n, a, b, o):
+    if forward_elimination(self, n, a, b, o, False):
         x = backward_substitution(n, a, b, o)
         for i in range(n):
             print(x[i])
@@ -366,7 +378,7 @@ def gauss_jordan(self, n, a, b):
     self.runtime.set_start_time()
     o = [i for i in range(n)]
 
-    if forward_elimination(self, n, a, b, o):
+    if forward_elimination(self, n, a, b, o, False):
         x = backward_elimination(n, a, b, o)
         for i in range(n):
             print(x[i])
@@ -375,6 +387,22 @@ def gauss_jordan(self, n, a, b):
 
     self.runtime.set_end_time()
     self.runtime.show_runtime()
+
+
+def doolittle(self, n, a):
+    forward_elimination(self, n, a, [0 for _ in range(n)], [0 for _ in range(n)], True)
+
+
+def crout(self, n, a):
+    doolittle(self, n, a)
+    for i in range(n):
+        for j in range(i, n):
+            if i != j:
+                a[i][j], a[j][i] = a[j][i], a[i][j]
+
+
+def chelosky(self, n, a):
+    pass
 
 
 def jacobi(self, n, a, b, initial_guess, epsilon, max_iteration):
