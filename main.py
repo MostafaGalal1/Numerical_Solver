@@ -396,13 +396,15 @@ def doolittle(self, n, a):
 def crout(self, n, a):
     doolittle(self, n, a)
     for i in range(n):
-        for j in range(i, n):
-            if i != j:
-                a[i][j], a[j][i] = a[j][i], a[i][j]
+        for j in range(i + 1, n):
+            a[i][j], a[j][i] = a[j][i], a[i][j]
 
 
 def chelosky(self, n, a):
-    pass
+    doolittle(self, n, a)
+    for i in range(n):
+        for j in range(i + 1, n):
+            a[i][j] /= a[i][i]
 
 
 def jacobi(self, n, a, b, initial_guess, epsilon, max_iteration):
