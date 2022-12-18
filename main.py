@@ -27,7 +27,9 @@ class Runtime_Calculate:
 
 
 class Ui_MainWindow(object):
-    epsilon = 1e-9
+    precision = 5
+    iterations = 10
+    epsilon = 5
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -37,7 +39,7 @@ class Ui_MainWindow(object):
         MainWindow.resize(452, 484)
         MainWindow.setMaximumHeight(736)
         MainWindow.setFixedWidth(452)
-        MainWindow.setFixedHeight(484)
+        MainWindow.setFixedHeight(514)
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -68,43 +70,67 @@ class Ui_MainWindow(object):
         self.input_textbox.setGeometry(QtCore.QRect(20, 140, 411, 221))
         self.input_textbox.setObjectName("input_textbox")
 
+        self.precision_label = QtWidgets.QLabel(self.centralwidget)
+        self.precision_label.setGeometry(QtCore.QRect(30, 370, 55, 20))
+        self.precision_label.setObjectName("precision_label")
+
+        self.precision_spinbox = QtWidgets.QSpinBox(self.centralwidget)
+        self.precision_spinbox.setGeometry(QtCore.QRect(90, 370, 45, 20))
+        self.precision_spinbox.setObjectName("precision_spinbox")
+
+        self.max_iteration_label = QtWidgets.QLabel(self.centralwidget)
+        self.max_iteration_label.setGeometry(QtCore.QRect(150, 370, 80, 20))
+        self.max_iteration_label.setObjectName("max_iteration_label")
+
+        self.max_iteration_spinbox = QtWidgets.QSpinBox(self.centralwidget)
+        self.max_iteration_spinbox.setGeometry(QtCore.QRect(232, 370, 45, 20))
+        self.max_iteration_spinbox.setObjectName("max_iteration_spinbox")
+
+        self.relative_error_label = QtWidgets.QLabel(self.centralwidget)
+        self.relative_error_label.setGeometry(QtCore.QRect(292, 370, 82, 20))
+        self.relative_error_label.setObjectName("relative_error_label")
+
+        self.relative_error_spinbox = QtWidgets.QSpinBox(self.centralwidget)
+        self.relative_error_spinbox.setGeometry(QtCore.QRect(380, 370, 45, 20))
+        self.relative_error_spinbox.setObjectName("relative_error_spinbox")
+
         self.pivoting_type_label = QtWidgets.QLabel(self.centralwidget)
-        self.pivoting_type_label.setGeometry(QtCore.QRect(30, 370, 101, 20))
+        self.pivoting_type_label.setGeometry(QtCore.QRect(30, 400, 101, 20))
         self.pivoting_type_label.setObjectName("pivoting_type_label")
 
         self.decomposition_label = QtWidgets.QLabel(self.centralwidget)
-        self.decomposition_label.setGeometry(QtCore.QRect(30, 370, 120, 20))
+        self.decomposition_label.setGeometry(QtCore.QRect(30, 400, 120, 20))
         self.decomposition_label.setObjectName("decomposition_label")
 
         self.initial_guess_label = QtWidgets.QLabel(self.centralwidget)
-        self.initial_guess_label.setGeometry(QtCore.QRect(30, 370, 101, 20))
+        self.initial_guess_label.setGeometry(QtCore.QRect(30, 400, 101, 20))
         self.initial_guess_label.setObjectName("initial_guess_label")
 
         self.none_pivoting = QtWidgets.QRadioButton(self.centralwidget)
-        self.none_pivoting.setGeometry(QtCore.QRect(30, 400, 95, 20))
+        self.none_pivoting.setGeometry(QtCore.QRect(30, 430, 95, 20))
         self.none_pivoting.setObjectName("none_pivoting")
 
         self.partial_pivoting = QtWidgets.QRadioButton(self.centralwidget)
-        self.partial_pivoting.setGeometry(QtCore.QRect(180, 400, 95, 20))
+        self.partial_pivoting.setGeometry(QtCore.QRect(180, 430, 95, 20))
         self.partial_pivoting.setObjectName("partial_pivoting")
 
         self.complete_pivoting = QtWidgets.QRadioButton(self.centralwidget)
-        self.complete_pivoting.setGeometry(QtCore.QRect(330, 400, 95, 20))
+        self.complete_pivoting.setGeometry(QtCore.QRect(330, 430, 95, 20))
         self.complete_pivoting.setObjectName("complete_pivoting")
 
         self.initial_guess_textbox = QtWidgets.QLineEdit(self.centralwidget)
-        self.initial_guess_textbox.setGeometry(QtCore.QRect(20, 400, 411, 22))
+        self.initial_guess_textbox.setGeometry(QtCore.QRect(20, 430, 411, 22))
         self.initial_guess_textbox.setObjectName("initial_guess_textbox")
 
         self.decomposition_combobox = QtWidgets.QComboBox(self.centralwidget)
-        self.decomposition_combobox.setGeometry(QtCore.QRect(20, 400, 411, 22))
+        self.decomposition_combobox.setGeometry(QtCore.QRect(20, 430, 411, 22))
         self.decomposition_combobox.setObjectName("decomposition_combobox")
         self.decomposition_combobox.addItem("")
         self.decomposition_combobox.addItem("")
         self.decomposition_combobox.addItem("")
 
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(20, 430, 411, 28))
+        self.pushButton.setGeometry(QtCore.QRect(20, 460, 411, 28))
         self.pushButton.setObjectName("pushButton")
         self.pushButton.pressed.connect(self.solve_it)
 
@@ -115,7 +141,7 @@ class Ui_MainWindow(object):
         self.result_label.setMargin(5)
 
         self.scroll_area = QtWidgets.QScrollArea(self.centralwidget)
-        self.scroll_area.setGeometry(QtCore.QRect(20, 470, 411, 0))
+        self.scroll_area.setGeometry(QtCore.QRect(20, 500, 411, 0))
         self.scroll_area.setFixedWidth(411)
         self.scroll_area.setWidget(self.result_label)
 
@@ -150,7 +176,24 @@ class Ui_MainWindow(object):
         self.linear_system_label.setText(_translate("MainWindow", "Linear system:"))
         self.pivoting_type_label.setText(_translate("MainWindow", "Pivoting type:"))
         self.initial_guess_label.setText(_translate("MainWindow", "Initial guess:"))
+
+        self.precision_label.setText(_translate("MainWindow", "Precision:"))
+        self.max_iteration_label.setText(_translate("MainWindow", "Iterations No:"))
+        self.relative_error_label.setText(_translate("MainWindow", "Relative error:"))
         self.decomposition_label.setText(_translate("MainWindow", "Decomposition form:"))
+
+        self.precision_spinbox.setMaximum(10)
+        self.precision_spinbox.setMinimum(3)
+
+        self.max_iteration_spinbox.setMaximum(99)
+        self.max_iteration_spinbox.setMinimum(2)
+
+        self.relative_error_spinbox.setMaximum(8)
+        self.relative_error_spinbox.setMinimum(1)
+
+        self.precision_spinbox.setValue(self.precision)
+        self.max_iteration_spinbox.setValue(self.iterations)
+        self.relative_error_spinbox.setValue(self.epsilon)
 
         self.main_combobox.setItemText(0, _translate("MainWindow", "gauss elimination"))
         self.main_combobox.setItemText(1, _translate("MainWindow", "gauss-jordan"))
@@ -170,6 +213,12 @@ class Ui_MainWindow(object):
         self.decomposition_label.hide()
         self.decomposition_combobox.hide()
 
+        self.max_iteration_label.hide()
+        self.max_iteration_spinbox.hide()
+
+        self.relative_error_label.hide()
+        self.relative_error_spinbox.hide()
+
     def change(self):
         if self.main_combobox.currentIndex() == 0 or self.main_combobox.currentIndex() == 1:
             self.pivoting_type_label.show()
@@ -182,6 +231,12 @@ class Ui_MainWindow(object):
 
             self.decomposition_label.hide()
             self.decomposition_combobox.hide()
+
+            self.max_iteration_label.hide()
+            self.max_iteration_spinbox.hide()
+
+            self.relative_error_label.hide()
+            self.relative_error_spinbox.hide()
         elif self.main_combobox.currentIndex() == 3 or self.main_combobox.currentIndex() == 4:
             self.initial_guess_label.show()
             self.initial_guess_textbox.show()
@@ -193,6 +248,12 @@ class Ui_MainWindow(object):
 
             self.decomposition_label.hide()
             self.decomposition_combobox.hide()
+
+            self.max_iteration_label.show()
+            self.max_iteration_spinbox.show()
+
+            self.relative_error_label.show()
+            self.relative_error_spinbox.show()
         else:
             self.decomposition_label.show()
             self.decomposition_combobox.show()
@@ -205,8 +266,19 @@ class Ui_MainWindow(object):
             self.initial_guess_label.hide()
             self.initial_guess_textbox.hide()
 
+            self.max_iteration_label.hide()
+            self.max_iteration_spinbox.hide()
 
-    def solve_it(self, epsilon=epsilon):
+            self.relative_error_label.hide()
+            self.relative_error_spinbox.hide()
+
+
+    def solve_it(self):
+
+        self.precision = self.precision_spinbox.value()
+        self.iterations = self.max_iteration_spinbox.value()
+        self.epsilon = self.relative_error_spinbox.value()
+
         coff = self.input_textbox.toPlainText().split('\n')
         if coff[0].find(',') == -1:
             coff[0] += ','
@@ -214,7 +286,9 @@ class Ui_MainWindow(object):
         n = 0
         a = []
         b = []
+        initial = [0 for _ in range(n)]
         row_size = 0
+
         for i in range(len(coff)):
             try:
                 eva = list(ast.literal_eval(coff[i]))
@@ -240,7 +314,6 @@ class Ui_MainWindow(object):
             return
 
         if self.main_combobox.currentText() == "jacobi" or self.main_combobox.currentText() == "gauss-seidel":
-            initial = [0 for _ in range(n)]
             try:
                 row_size = len(list(ast.literal_eval(self.initial_guess_textbox.text())))
             except:
@@ -260,12 +333,11 @@ class Ui_MainWindow(object):
             elif self.decomposition_combobox.currentText() == "cholesky form":
                 chelosky(self, n, a)
         elif self.main_combobox.currentText() == "jacobi":
-            jacobi(self, n, a, b, initial, epsilon, 100)
+            jacobi(self, n, a, b, initial, self.epsilon, self.iterations)
         elif self.main_combobox.currentText() == "gauss-seidel":
-            gauss_seidel(self, n, a, b, initial, epsilon, 100)
+            gauss_seidel(self, n, a, b, initial, self.epsilon, self.iterations)
 
-        significant_figures = 5
-        s = "\n".join(str(" ".join(str(float(f'%.{significant_figures}g' % itt)) for itt in a[it])) + " " + str(b[it]) for it in range(n))
+        s = "\n".join(str(" ".join(str(float(f'%.{self.precision}g' % itt)) for itt in a[it])) + " " + str(b[it]) for it in range(n))
 
         self.result_label.setText(s)
         self.result_label.adjustSize()
