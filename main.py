@@ -40,10 +40,9 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle("Numerical Solver")
         MainWindow.setWindowIcon(QIcon("Course_Icon_LinAlgebra.ico"))
         MainWindow.setLayout(QVBoxLayout())
-        MainWindow.resize(452, 484)
-        MainWindow.setMaximumHeight(736)
+        MainWindow.resize(452, 514)
+        MainWindow.setMaximumHeight(700)
         MainWindow.setFixedWidth(452)
-        MainWindow.setFixedHeight(514)
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -147,6 +146,7 @@ class Ui_MainWindow(object):
         self.scroll_area = QtWidgets.QScrollArea(self.centralwidget)
         self.scroll_area.setGeometry(QtCore.QRect(20, 500, 411, 0))
         self.scroll_area.setFixedWidth(411)
+        self.scroll_area.setMaximumHeight(195)
         self.scroll_area.setWidget(self.result_label)
 
         MainWindow.setCentralWidget(self.centralwidget)
@@ -350,8 +350,9 @@ class Ui_MainWindow(object):
 
         self.result_label.setText(s)
         self.result_label.adjustSize()
-        self.scroll_area.adjustSize()
+        self.scroll_area.resize(self.result_label.width(), self.result_label.height() + 5)
         MainWindow.setFixedHeight(self.scroll_area.height() + self.scroll_area.y() + 26)
+        MainWindow.resize(MainWindow.width(), self.scroll_area.height() + self.scroll_area.y() + 26)
 
 
 def apply_precision(self, num):
