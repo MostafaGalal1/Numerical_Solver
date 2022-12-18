@@ -5,6 +5,7 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QVBoxLayout
 import ctypes
+import numpy as np
 
 my_app_id = "mycompany.myproduct.subproduct.version"
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(my_app_id)
@@ -27,9 +28,12 @@ class Runtime_Calculate:
 
 
 class Ui_MainWindow(object):
-    precision = 5
-    iterations = 10
-    epsilon = 5
+    default_precision = 5
+    default_iterations = 10
+    default_epsilon = 5
+    precision = default_precision
+    iterations = default_iterations
+    epsilon = default_epsilon
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -191,9 +195,9 @@ class Ui_MainWindow(object):
         self.relative_error_spinbox.setMaximum(8)
         self.relative_error_spinbox.setMinimum(1)
 
-        self.precision_spinbox.setValue(self.precision)
-        self.max_iteration_spinbox.setValue(self.iterations)
-        self.relative_error_spinbox.setValue(self.epsilon)
+        self.precision_spinbox.setValue(self.default_precision)
+        self.max_iteration_spinbox.setValue(self.default_iterations)
+        self.relative_error_spinbox.setValue(self.default_epsilon)
 
         self.main_combobox.setItemText(0, _translate("MainWindow", "gauss elimination"))
         self.main_combobox.setItemText(1, _translate("MainWindow", "gauss-jordan"))
@@ -220,6 +224,10 @@ class Ui_MainWindow(object):
         self.relative_error_spinbox.hide()
 
     def change(self):
+        self.precision_spinbox.setValue(self.default_precision)
+        self.max_iteration_spinbox.setValue(self.default_iterations)
+        self.relative_error_spinbox.setValue(self.default_epsilon)
+
         if self.main_combobox.currentIndex() == 0 or self.main_combobox.currentIndex() == 1:
             self.pivoting_type_label.show()
             self.none_pivoting.show()
@@ -274,7 +282,6 @@ class Ui_MainWindow(object):
 
 
     def solve_it(self):
-
         self.precision = self.precision_spinbox.value()
         self.iterations = self.max_iteration_spinbox.value()
         self.epsilon = self.relative_error_spinbox.value()
@@ -286,7 +293,7 @@ class Ui_MainWindow(object):
         n = 0
         a = []
         b = []
-        initial = [0 for _ in range(n)]
+        initial = []
         row_size = 0
 
         for i in range(len(coff)):
@@ -320,6 +327,8 @@ class Ui_MainWindow(object):
                 row_size = 0
             if row_size == n:
                 initial = list(ast.literal_eval(self.initial_guess_textbox.text()))
+            else:
+                initial = [0.0 for _ in range(n)]
 
         if self.main_combobox.currentText() == "gauss elimination":
             gauss_elimination(self, n, a, b)
@@ -337,7 +346,7 @@ class Ui_MainWindow(object):
         elif self.main_combobox.currentText() == "gauss-seidel":
             gauss_seidel(self, n, a, b, initial, self.epsilon, self.iterations)
 
-        s = "\n".join(str(" ".join(str(float(f'%.{self.precision}g' % itt)) for itt in a[it])) + " " + str(b[it]) for it in range(n))
+        s = "\n".join(str(" ".join(str(itt) for itt in a[it])) + " " + str(b[it]) for it in range(n))
 
         self.result_label.setText(s)
         self.result_label.adjustSize()
@@ -345,10 +354,8 @@ class Ui_MainWindow(object):
         MainWindow.setFixedHeight(self.scroll_area.height() + self.scroll_area.y() + 26)
 
 
-def integer_check(num):
-    if num == int(num):
-        return int(num)
-    return num
+def apply_precision(self, num):
+    return float(np.format_float_positional(num, precision=self.precision, unique=False, fractional=False, trim='k'))
 
 
 def partial_pivoting(n, a, b, k):
@@ -391,42 +398,42 @@ def forward_elimination(self, n, a, b, o, decomposition):
             if a[k][k] == 0:
                 return False
         for i in range(k + 1, n):
-            mult = integer_check(a[i][k] / a[k][k])
+            mult = apply_precision(self, a[i][k] / a[k][k])
             if decomposition:
                 a[i][k] = mult
             else:
                 a[i][k] = 0
             for j in range(k + 1, n):
-                a[i][j] = integer_check(a[i][j] - mult * a[k][j])
+                a[i][j] = apply_precision(self, a[i][j] - mult * a[k][j])
             if not decomposition:
-                b[i] = integer_check(b[i] - mult * b[k])
+                b[i] = apply_precision(self, b[i] - mult * b[k])
 
     return True
 
 
-def backward_elimination(n, a, b, o):
-    x = [0 for _ in range(n)]
+def backward_elimination(self, n, a, b, o):
+    x = [0.0 for _ in range(n)]
 
     for k in range(n - 1, -1, -1):
-        b[k] = integer_check(b[k] / a[k][k])
+        b[k] = apply_precision(self, b[k] / a[k][k])
         a[k][k] = 1
         for i in range(k - 1, -1, -1):
-            b[i] = integer_check(b[i] - a[i][k] * b[k])
+            b[i] = apply_precision(self, b[i] - a[i][k] * b[k])
             a[i][k] = 0
         x[o[k]] = b[k]
 
     return x
 
 
-def backward_substitution(n, a, b, o):
-    x = [0 for _ in range(n)]
+def backward_substitution(self, n, a, b, o):
+    x = [0.0 for _ in range(n)]
 
-    x[n - 1] = integer_check(b[n - 1] / a[n - 1][n - 1])
+    x[n - 1] = apply_precision(self, b[n - 1] / a[n - 1][n - 1])
     for i in range(n - 1, -1, -1):
         tot = 0
         for j in range(i + 1, n):
-            tot = integer_check(tot + x[j] * a[i][j])
-        x[o[i]] = integer_check((b[i] - tot) / a[i][i])
+            tot = apply_precision(self, tot + x[j] * a[i][j])
+        x[o[i]] = apply_precision(self, (b[i] - tot) / a[i][i])
 
     return x
 
@@ -436,7 +443,7 @@ def gauss_elimination(self, n, a, b):
     o = [i for i in range(n)]
 
     if forward_elimination(self, n, a, b, o, False):
-        x = backward_substitution(n, a, b, o)
+        x = backward_substitution(self, n, a, b, o)
         for i in range(n):
             print(x[i])
     else:
@@ -451,7 +458,7 @@ def gauss_jordan(self, n, a, b):
     o = [i for i in range(n)]
 
     if forward_elimination(self, n, a, b, o, False):
-        x = backward_elimination(n, a, b, o)
+        x = backward_elimination(self, n, a, b, o)
         for i in range(n):
             print(x[i])
     else:
@@ -476,14 +483,14 @@ def chelosky(self, n, a):
     doolittle(self, n, a)
     for i in range(n):
         for j in range(i + 1, n):
-            a[i][j] /= a[i][i]
+            a[i][j] = apply_precision(self, a[i][j] / a[i][i])
 
 
 def jacobi(self, n, a, b, initial_guess, epsilon, max_iteration):
     self.runtime.set_start_time()
 
-    relative_error = [0 for _ in range(n)]
-    x_new = [0 for _ in range(n)]
+    relative_error = [0.0 for _ in range(n)]
+    x_new = [0.0 for _ in range(n)]
     x_old = initial_guess
 
     iteration = 0
@@ -494,9 +501,9 @@ def jacobi(self, n, a, b, initial_guess, epsilon, max_iteration):
             numerator = b[i]
             for j in range(n):
                 if i != j:
-                    numerator -= a[i][j] * x_old[j]
-            x_new[i] = numerator / a[i][i]
-            relative_error[i] = abs((x_new[i] - x_old[i]) / x_new[i])
+                    numerator = apply_precision(self, numerator - a[i][j] * x_old[j])
+            x_new[i] = apply_precision(self, numerator / a[i][i])
+            relative_error[i] = apply_precision(self, abs((x_new[i] - x_old[i]) / x_new[i]))
             if relative_error[i] <= epsilon:
                 counter += 1
 
@@ -515,7 +522,7 @@ def jacobi(self, n, a, b, initial_guess, epsilon, max_iteration):
 
 def gauss_seidel(self, n, a, b, initial_guess, epsilon, max_iteration):
     self.runtime.set_start_time()
-    relative_error = [0 for _ in range(n)]
+    relative_error = [0.0 for _ in range(n)]
     x = initial_guess
 
     iteration = 0
@@ -527,9 +534,9 @@ def gauss_seidel(self, n, a, b, initial_guess, epsilon, max_iteration):
             numerator = b[i]
             for j in range(n):
                 if i != j:
-                    numerator -= a[i][j] * x[j]
-            x[i] = numerator / a[i][i]
-            relative_error[i] = abs((x[i] - x_tmp) / x[i])
+                    numerator = apply_precision(self, numerator - a[i][j] * x[j])
+            x[i] = apply_precision(self, numerator / a[i][i])
+            relative_error[i] = apply_precision(self, abs((x[i] - x_tmp) / x[i]))
             if relative_error[i] <= epsilon:
                 counter += 1
 
