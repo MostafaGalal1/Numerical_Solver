@@ -12,7 +12,7 @@ class GaussJordan(AbstractMethod):
         o = [i for i in range(self.n)]
 
         if self.service.forward_elimination(self.n, self.a, self.b, o, False):
-            x = self.service.backward_substitution(self.n, self.a, self.b, o)
+            x = self.service.backward_elimination(self.n, self.a, self.b, o)
             for i in range(self.n):
                 print(x[i])
         else:

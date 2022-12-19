@@ -5,6 +5,7 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QVBoxLayout
 import ctypes
+from decimal import Decimal
 from service import *
 from methods.methods_factory import *
 
@@ -297,10 +298,20 @@ class Ui_MainWindow(object):
         initial = []
         row_size = 0
         for i in range(len(coff)):
-            try:
-                eva = list(ast.literal_eval(coff[i]))
-                a.append(eva[0:len(eva) - 1])
-                b.append(eva[len(eva) - 1])
+                try:
+                    eva = list(ast.literal_eval(coff[i]))
+                    a.append(eva[0:len(eva) - 1])
+                    b.append(eva[len(eva) - 1])
+                except:
+                    coff_split = coff[i].split(',')
+                    eva = list()
+                    for num in coff_split:
+                        try:
+                            eva.append(float(num) if float(num)!=int(num) else int(num))
+                        except:
+                            eva.append(0)
+                    a.append(list(eva[0:len(eva) - 1]))
+                    b.append(eva[len(eva) - 1])
                 n += 1
                 if n == 1:
                     row_size = len(a[0])
@@ -308,9 +319,6 @@ class Ui_MainWindow(object):
                     self.result_label.setText(
                         f"Row(1) contains {row_size + 1} elements and row({n}) contains {len(a[n - 1]) + 1}"
                         " elements, So your input is invalid")
-                    return
-            except:
-                continue
 
         if n < row_size:
             self.result_label.setText(
