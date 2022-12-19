@@ -5,7 +5,9 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QVBoxLayout
 import ctypes
-import numpy as np
+from decimal import Decimal
+from service import *
+from methods.methods_factory import *
 
 my_app_id = "mycompany.myproduct.subproduct.version"
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(my_app_id)
@@ -282,25 +284,34 @@ class Ui_MainWindow(object):
 
 
     def solve_it(self):
-        self.precision = self.precision_spinbox.value()
         self.iterations = self.max_iteration_spinbox.value()
         self.epsilon = self.relative_error_spinbox.value()
 
         coff = self.input_textbox.toPlainText().split('\n')
         if coff[0].find(',') == -1:
             coff[0] += ','
+            return
 
         n = 0
         a = []
         b = []
         initial = []
         row_size = 0
-
         for i in range(len(coff)):
-            try:
-                eva = list(ast.literal_eval(coff[i]))
-                a.append(eva[0:len(eva) - 1])
-                b.append(eva[len(eva) - 1])
+                try:
+                    eva = list(ast.literal_eval(coff[i]))
+                    a.append(eva[0:len(eva) - 1])
+                    b.append(eva[len(eva) - 1])
+                except:
+                    coff_split = coff[i].split(',')
+                    eva = list()
+                    for num in coff_split:
+                        try:
+                            eva.append(float(num) if float(num)!=int(num) else int(num))
+                        except:
+                            eva.append(0)
+                    a.append(list(eva[0:len(eva) - 1]))
+                    b.append(eva[len(eva) - 1])
                 n += 1
                 if n == 1:
                     row_size = len(a[0])
@@ -308,9 +319,6 @@ class Ui_MainWindow(object):
                     self.result_label.setText(
                         f"Row(1) contains {row_size + 1} elements and row({n}) contains {len(a[n - 1]) + 1}"
                         " elements, So your input is invalid")
-                    return
-            except:
-                continue
 
         if n < row_size:
             self.result_label.setText(
@@ -330,21 +338,12 @@ class Ui_MainWindow(object):
             else:
                 initial = [0.0 for _ in range(n)]
 
-        if self.main_combobox.currentText() == "gauss elimination":
-            gauss_elimination(self, n, a, b)
-        elif self.main_combobox.currentText() == "gauss-jordan":
-            gauss_jordan(self, n, a, b)
-        elif self.main_combobox.currentText() == "LU-decomposition":
-            if self.decomposition_combobox.currentText() == "doolittle form":
-                doolittle(self, n, a)
-            elif self.decomposition_combobox.currentText() == "crout form":
-                crout(self, n, a)
-            elif self.decomposition_combobox.currentText() == "cholesky form":
-                chelosky(self, n, a)
-        elif self.main_combobox.currentText() == "jacobi":
-            jacobi(self, n, a, b, initial, self.epsilon, self.iterations)
-        elif self.main_combobox.currentText() == "gauss-seidel":
-            gauss_seidel(self, n, a, b, initial, self.epsilon, self.iterations)
+        service = Service(self.precision_spinbox.value(),self.partial_pivoting.isChecked(),self.complete_pivoting.isChecked())
+        if self.main_combobox.currentText() == "LU-decomposition":
+            MethodsFactory(self.decomposition_combobox.currentText(), service, n, a, b, initial, self.epsilon, self.iterations).create().execute()
+        else:
+            MethodsFactory(self.main_combobox.currentText(), service, n, a, b, initial, self.epsilon, self.iterations).create().execute()
+
 
         s = "\n".join(str(" ".join(str(itt) for itt in a[it])) + " " + str(b[it]) for it in range(n))
 
@@ -353,203 +352,6 @@ class Ui_MainWindow(object):
         self.scroll_area.resize(self.result_label.width(), self.result_label.height() + 5)
         MainWindow.setFixedHeight(self.scroll_area.height() + self.scroll_area.y() + 26)
         MainWindow.resize(MainWindow.width(), self.scroll_area.height() + self.scroll_area.y() + 26)
-
-
-def apply_precision(self, num):
-    return float(np.format_float_positional(num, precision=self.precision, unique=False, fractional=False, trim='k'))
-
-
-def partial_pivoting(n, a, b, k):
-    mx = abs(a[k][k])
-    row = k
-    for i in range(k + 1, n):
-        if mx < abs(a[i][k]):
-            row = i
-            mx = abs(a[i][k])
-
-    a[k], a[row] = a[row], a[k]
-    b[k], b[row] = b[row], b[k]
-
-
-def complete_pivoting(n, a, b, k, o):
-    mx = abs(a[k][k])
-    row = k
-    col = k
-    for i in range(k, n):
-        for j in range(k, n):
-            if mx < abs(a[i][j]):
-                row = i
-                col = j
-                mx = abs(a[i][j])
-
-    a[k], a[row] = a[row], a[k]
-    b[k], b[row] = b[row], b[k]
-    o[k], o[col] = o[col], o[k]
-    for i in range(n):
-        a[i][k], a[i][col] = a[i][col], a[i][k]
-
-
-def forward_elimination(self, n, a, b, o, decomposition):
-    for k in range(n):
-        if not decomposition:
-            if self.partial_pivoting.isChecked():
-                partial_pivoting(n, a, b, k)
-            elif self.complete_pivoting.isChecked():
-                complete_pivoting(n, a, b, k, o)
-            if a[k][k] == 0:
-                return False
-        for i in range(k + 1, n):
-            mult = apply_precision(self, a[i][k] / a[k][k])
-            if decomposition:
-                a[i][k] = mult
-            else:
-                a[i][k] = 0
-            for j in range(k + 1, n):
-                a[i][j] = apply_precision(self, a[i][j] - mult * a[k][j])
-            if not decomposition:
-                b[i] = apply_precision(self, b[i] - mult * b[k])
-
-    return True
-
-
-def backward_elimination(self, n, a, b, o):
-    x = [0.0 for _ in range(n)]
-
-    for k in range(n - 1, -1, -1):
-        b[k] = apply_precision(self, b[k] / a[k][k])
-        a[k][k] = 1
-        for i in range(k - 1, -1, -1):
-            b[i] = apply_precision(self, b[i] - a[i][k] * b[k])
-            a[i][k] = 0
-        x[o[k]] = b[k]
-
-    return x
-
-
-def backward_substitution(self, n, a, b, o):
-    x = [0.0 for _ in range(n)]
-
-    x[n - 1] = apply_precision(self, b[n - 1] / a[n - 1][n - 1])
-    for i in range(n - 1, -1, -1):
-        tot = 0
-        for j in range(i + 1, n):
-            tot = apply_precision(self, tot + x[j] * a[i][j])
-        x[o[i]] = apply_precision(self, (b[i] - tot) / a[i][i])
-
-    return x
-
-
-def gauss_elimination(self, n, a, b):
-    self.runtime.set_start_time()
-    o = [i for i in range(n)]
-
-    if forward_elimination(self, n, a, b, o, False):
-        x = backward_substitution(self, n, a, b, o)
-        for i in range(n):
-            print(x[i])
-    else:
-        print("There is no solution")
-
-    self.runtime.set_end_time()
-    self.runtime.show_runtime()
-
-
-def gauss_jordan(self, n, a, b):
-    self.runtime.set_start_time()
-    o = [i for i in range(n)]
-
-    if forward_elimination(self, n, a, b, o, False):
-        x = backward_elimination(self, n, a, b, o)
-        for i in range(n):
-            print(x[i])
-    else:
-        print("There is no solution")
-
-    self.runtime.set_end_time()
-    self.runtime.show_runtime()
-
-
-def doolittle(self, n, a):
-    forward_elimination(self, n, a, [0 for _ in range(n)], [0 for _ in range(n)], True)
-
-
-def crout(self, n, a):
-    doolittle(self, n, a)
-    for i in range(n):
-        for j in range(i + 1, n):
-            a[i][j], a[j][i] = a[j][i], a[i][j]
-
-
-def chelosky(self, n, a):
-    doolittle(self, n, a)
-    for i in range(n):
-        for j in range(i + 1, n):
-            a[i][j] = apply_precision(self, a[i][j] / a[i][i])
-
-
-def jacobi(self, n, a, b, initial_guess, epsilon, max_iteration):
-    self.runtime.set_start_time()
-
-    relative_error = [0.0 for _ in range(n)]
-    x_new = [0.0 for _ in range(n)]
-    x_old = initial_guess
-
-    iteration = 0
-    while iteration < max_iteration:
-        iteration += 1
-        counter = 0
-        for i in range(n):
-            numerator = b[i]
-            for j in range(n):
-                if i != j:
-                    numerator = apply_precision(self, numerator - a[i][j] * x_old[j])
-            x_new[i] = apply_precision(self, numerator / a[i][i])
-            relative_error[i] = apply_precision(self, abs((x_new[i] - x_old[i]) / x_new[i]))
-            if relative_error[i] <= epsilon:
-                counter += 1
-
-        if counter == n:
-            break
-
-        for i in range(n):
-            x_old[i] = x_new[i]
-
-    for i in range(n):
-        print(x_new[i])
-
-    self.runtime.set_end_time()
-    self.runtime.show_runtime()
-
-
-def gauss_seidel(self, n, a, b, initial_guess, epsilon, max_iteration):
-    self.runtime.set_start_time()
-    relative_error = [0.0 for _ in range(n)]
-    x = initial_guess
-
-    iteration = 0
-    while iteration < max_iteration:
-        iteration += 1
-        counter = 0
-        for i in range(n):
-            x_tmp = x[i]
-            numerator = b[i]
-            for j in range(n):
-                if i != j:
-                    numerator = apply_precision(self, numerator - a[i][j] * x[j])
-            x[i] = apply_precision(self, numerator / a[i][i])
-            relative_error[i] = apply_precision(self, abs((x[i] - x_tmp) / x[i]))
-            if relative_error[i] <= epsilon:
-                counter += 1
-
-        if counter == n:
-            break
-
-    for i in range(n):
-        print(x[i])
-
-    self.runtime.set_end_time()
-    self.runtime.show_runtime()
-
 
 if __name__ == "__main__":
     import sys
