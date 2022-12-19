@@ -340,9 +340,9 @@ class Ui_MainWindow(object):
 
         service = Service(self.precision_spinbox.value(),self.partial_pivoting.isChecked(),self.complete_pivoting.isChecked())
         if self.main_combobox.currentText() == "LU-decomposition":
-            MethodsFactory(self.decomposition_combobox.currentText(), service, n, a, b, initial, self.epsilon, self.iterations).create().execute()
+           massage = MethodsFactory(self.decomposition_combobox.currentText(), service, n, a, b, initial, self.epsilon, self.iterations).create().execute()
         else:
-            MethodsFactory(self.main_combobox.currentText(), service, n, a, b, initial, self.epsilon, self.iterations).create().execute()
+           massage = MethodsFactory(self.main_combobox.currentText(), service, n, a, b, initial, self.epsilon, self.iterations).create().execute()
 
 
         s = "\n".join(str(" ".join(str(itt) for itt in a[it])) + " " + str(b[it]) for it in range(n))
