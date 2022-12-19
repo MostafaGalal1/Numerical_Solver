@@ -7,7 +7,8 @@ class GaussSeidel(AbstractMethod):
         self.a = a
         self.b = b
         self.initial_guess = initial
-        self.epsilon = epsilon
+        # Here we are dividing by 1000 because the value of epsilon does not go below 1 in the GUI
+        self.epsilon = epsilon / 1000.0
         self.max_iteration = iterations
         self.service = service
 
@@ -35,3 +36,6 @@ class GaussSeidel(AbstractMethod):
 
         for i in range(self.n):
             print(x[i])
+
+        ans = "approximation of x =  " + " , ".join(str(itt) for itt in x)
+        return ans
