@@ -7,7 +7,8 @@ class Jacobi(AbstractMethod):
         self.a = a
         self.b = b
         self.initial_guess = initial
-        self.epsilon = epsilon
+        # Here we are dividing by 1000 because the value of epsilon does not go below 1 in the GUI
+        self.epsilon = epsilon / 1000.0
         self.max_iteration = iterations
         self.service = service
 
@@ -38,3 +39,6 @@ class Jacobi(AbstractMethod):
 
         for i in range(self.n):
             print(x_new[i])
+
+        ans = "approximation of x =  " + " , ".join(str(itt) for itt in x_new)
+        return ans

@@ -80,19 +80,19 @@ class Ui_MainWindow(object):
         self.precision_label.setObjectName("precision_label")
 
         self.precision_spinbox = QtWidgets.QSpinBox(self.centralwidget)
-        self.precision_spinbox.setGeometry(QtCore.QRect(90, 370, 45, 20))
+        self.precision_spinbox.setGeometry(QtCore.QRect(80, 370, 45, 20))
         self.precision_spinbox.setObjectName("precision_spinbox")
 
         self.max_iteration_label = QtWidgets.QLabel(self.centralwidget)
-        self.max_iteration_label.setGeometry(QtCore.QRect(150, 370, 80, 20))
+        self.max_iteration_label.setGeometry(QtCore.QRect(135, 370, 80, 20))
         self.max_iteration_label.setObjectName("max_iteration_label")
 
         self.max_iteration_spinbox = QtWidgets.QSpinBox(self.centralwidget)
-        self.max_iteration_spinbox.setGeometry(QtCore.QRect(232, 370, 45, 20))
+        self.max_iteration_spinbox.setGeometry(QtCore.QRect(207, 370, 45, 20))
         self.max_iteration_spinbox.setObjectName("max_iteration_spinbox")
 
         self.relative_error_label = QtWidgets.QLabel(self.centralwidget)
-        self.relative_error_label.setGeometry(QtCore.QRect(292, 370, 82, 20))
+        self.relative_error_label.setGeometry(QtCore.QRect(262, 370, 120, 20))
         self.relative_error_label.setObjectName("relative_error_label")
 
         self.relative_error_spinbox = QtWidgets.QSpinBox(self.centralwidget)
@@ -185,7 +185,7 @@ class Ui_MainWindow(object):
 
         self.precision_label.setText(_translate("MainWindow", "Precision:"))
         self.max_iteration_label.setText(_translate("MainWindow", "Iterations No:"))
-        self.relative_error_label.setText(_translate("MainWindow", "Relative error:"))
+        self.relative_error_label.setText(_translate("MainWindow", "Relative error (x10e-3):"))
         self.decomposition_label.setText(_translate("MainWindow", "Decomposition form:"))
 
         self.precision_spinbox.setMaximum(10)
@@ -344,10 +344,9 @@ class Ui_MainWindow(object):
         else:
            massage = MethodsFactory(self.main_combobox.currentText(), service, n, a, b, initial, self.epsilon, self.iterations).create().execute()
 
-
         s = "\n".join(str(" ".join(str(itt) for itt in a[it])) + " " + str(b[it]) for it in range(n))
 
-        self.result_label.setText(s)
+        self.result_label.setText(massage)
         self.result_label.adjustSize()
         self.scroll_area.resize(self.result_label.width(), self.result_label.height() + 5)
         MainWindow.setFixedHeight(self.scroll_area.height() + self.scroll_area.y() + 26)
