@@ -41,12 +41,12 @@ class Jacobi(AbstractMethod):
                     counter += 1
                 steps += "Relative_error(x" + str(i) + ") = " + str(relative_error[i]) + "\n"
 
+            steps+="________________________________\n"
             if counter == self.n:
                 break
 
             for i in range(self.n):
                 x_old[i] = x_new[i]
-            steps+="________________________________\n"
 
         ans = steps + "approximation of x =  " + " , ".join(str(itt) for itt in x_new)
         return ans
