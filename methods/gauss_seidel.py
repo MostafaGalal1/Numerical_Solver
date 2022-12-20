@@ -26,7 +26,10 @@ class GaussSeidel(AbstractMethod):
                 for j in range(self.n):
                     if i != j:
                         numerator = self.service.apply_precision(numerator - self.a[i][j] * x[j])
-                x[i] = self.service.apply_precision(numerator / self.a[i][i])
+                try:
+                    x[i] = self.service.apply_precision(numerator / self.a[i][i])
+                except ZeroDivisionError:
+                    return "x = infinity"+", infinity"*len(x)
                 if x[i] != 0:
                     relative_error[i] = self.service.apply_precision(abs((x[i] - x_tmp) / x[i]))
                 else:
