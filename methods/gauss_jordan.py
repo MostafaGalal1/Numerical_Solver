@@ -13,7 +13,8 @@ class GaussJordan(AbstractMethod):
 
         if self.service.forward_elimination(self.n, self.a, self.b, o, False):
             x = self.service.backward_elimination(self.n, self.a, self.b, o)
-            for i in range(self.n):
-                print(x[i])
         else:
-            print("There is no solution")
+            return "There is no solution"
+
+        ans = "A | b = \n" + "\n".join(str(" , ".join(str(itt) for itt in self.a[it])) + " , " + str(self.b[it]) for it in range(self.n)) + "\n\nx = " + " , ".join(str(itt) for itt in x)
+        return ans

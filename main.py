@@ -13,22 +13,6 @@ my_app_id = "mycompany.myproduct.subproduct.version"
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(my_app_id)
 
 
-class Runtime_Calculate:
-    start_time = 0.0
-    end_time = 0.0
-
-    def set_start_time(self):
-        self.start_time = time.process_time()
-
-    def set_end_time(self):
-        self.end_time = time.process_time()
-
-    def show_runtime(self):
-        print('%.16f' % ((self.end_time * self.end_time - self.start_time * self.start_time) / (1000 * (self.end_time + self.start_time))), "millisecond")
-        self.start_time = 0.0
-        self.end_time = 0.0
-
-
 class Ui_MainWindow(object):
     default_precision = 5
     default_iterations = 10
@@ -80,19 +64,19 @@ class Ui_MainWindow(object):
         self.precision_label.setObjectName("precision_label")
 
         self.precision_spinbox = QtWidgets.QSpinBox(self.centralwidget)
-        self.precision_spinbox.setGeometry(QtCore.QRect(90, 370, 45, 20))
+        self.precision_spinbox.setGeometry(QtCore.QRect(80, 370, 45, 20))
         self.precision_spinbox.setObjectName("precision_spinbox")
 
         self.max_iteration_label = QtWidgets.QLabel(self.centralwidget)
-        self.max_iteration_label.setGeometry(QtCore.QRect(150, 370, 80, 20))
+        self.max_iteration_label.setGeometry(QtCore.QRect(135, 370, 80, 20))
         self.max_iteration_label.setObjectName("max_iteration_label")
 
         self.max_iteration_spinbox = QtWidgets.QSpinBox(self.centralwidget)
-        self.max_iteration_spinbox.setGeometry(QtCore.QRect(232, 370, 45, 20))
+        self.max_iteration_spinbox.setGeometry(QtCore.QRect(207, 370, 45, 20))
         self.max_iteration_spinbox.setObjectName("max_iteration_spinbox")
 
         self.relative_error_label = QtWidgets.QLabel(self.centralwidget)
-        self.relative_error_label.setGeometry(QtCore.QRect(292, 370, 82, 20))
+        self.relative_error_label.setGeometry(QtCore.QRect(262, 370, 120, 20))
         self.relative_error_label.setObjectName("relative_error_label")
 
         self.relative_error_spinbox = QtWidgets.QSpinBox(self.centralwidget)
@@ -163,7 +147,6 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.main_combobox.currentIndexChanged['QString'].connect(self.change)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        self.runtime = Runtime_Calculate()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -175,8 +158,8 @@ class Ui_MainWindow(object):
         self.none_pivoting.setChecked(True)
 
         self.info_label.setText(_translate("MainWindow", "Enter Equations line by line like\n"
-                                                    "3, 9, 16\n"
-                                                    "5, 12, 1"))
+                                                         "3, 9, 16\n"
+                                                         "5, 12, 1"))
         self.info_label.setAlignment(QtCore.Qt.AlignCenter)
 
         self.linear_system_label.setText(_translate("MainWindow", "Linear system:"))
@@ -185,7 +168,7 @@ class Ui_MainWindow(object):
 
         self.precision_label.setText(_translate("MainWindow", "Precision:"))
         self.max_iteration_label.setText(_translate("MainWindow", "Iterations No:"))
-        self.relative_error_label.setText(_translate("MainWindow", "Relative error:"))
+        self.relative_error_label.setText(_translate("MainWindow", "Relative error (x10e-3):"))
         self.decomposition_label.setText(_translate("MainWindow", "Decomposition form:"))
 
         self.precision_spinbox.setMaximum(10)
@@ -282,7 +265,6 @@ class Ui_MainWindow(object):
             self.relative_error_label.hide()
             self.relative_error_spinbox.hide()
 
-
     def solve_it(self):
         self.iterations = self.max_iteration_spinbox.value()
         self.epsilon = self.relative_error_spinbox.value()
@@ -298,27 +280,32 @@ class Ui_MainWindow(object):
         initial = []
         row_size = 0
         for i in range(len(coff)):
-                try:
-                    eva = list(ast.literal_eval(coff[i]))
-                    a.append(eva[0:len(eva) - 1])
-                    b.append(eva[len(eva) - 1])
-                except:
-                    coff_split = coff[i].split(',')
-                    eva = list()
-                    for num in coff_split:
-                        try:
-                            eva.append(float(num) if float(num)!=int(num) else int(num))
-                        except:
-                            eva.append(0)
-                    a.append(list(eva[0:len(eva) - 1]))
-                    b.append(eva[len(eva) - 1])
-                n += 1
-                if n == 1:
-                    row_size = len(a[0])
-                if row_size != len(a[n - 1]):
-                    self.result_label.setText(
-                        f"Row(1) contains {row_size + 1} elements and row({n}) contains {len(a[n - 1]) + 1}"
-                        " elements, So your input is invalid")
+            try:
+                eva = list(ast.literal_eval(coff[i]))
+                a.append(eva[0:len(eva) - 1])
+                b.append(eva[len(eva) - 1])
+            except:
+                coff_split = coff[i].split(',')
+                eva = list()
+                for num in coff_split:
+                    try:
+                        eva.append(float(num) if float(num) != int(num) else int(num))
+                    except:
+                        eva.append(0)
+                a.append(list(eva[0:len(eva) - 1]))
+                b.append(eva[len(eva) - 1])
+            n += 1
+            if n == 1:
+                row_size = len(a[0])
+            if row_size != len(a[n - 1]):
+                self.result_label.setText(
+                    f"Row(1) contains {row_size + 1} elements and row({n}) contains {len(a[n - 1]) + 1}"
+                    " elements, So your input is invalid")
+                self.result_label.adjustSize()
+                self.scroll_area.resize(self.result_label.width(), self.result_label.height() + 25)
+                MainWindow.setFixedHeight(self.scroll_area.height() + self.scroll_area.y() + 26)
+                MainWindow.resize(MainWindow.width(), self.scroll_area.height() + self.scroll_area.y() + 26)
+                return
 
         if n < row_size:
             self.result_label.setText(
@@ -327,6 +314,8 @@ class Ui_MainWindow(object):
         elif n > row_size:
             self.result_label.setText(f"Matrix size must be {row_size + 1}x{row_size + 2}")
             return
+
+        start = time.perf_counter()
 
         if self.main_combobox.currentText() == "jacobi" or self.main_combobox.currentText() == "gauss-seidel":
             try:
@@ -338,20 +327,21 @@ class Ui_MainWindow(object):
             else:
                 initial = [0.0 for _ in range(n)]
 
-        service = Service(self.precision_spinbox.value(),self.partial_pivoting.isChecked(),self.complete_pivoting.isChecked())
+        service = Service(self.precision_spinbox.value(), self.partial_pivoting.isChecked(),
+                          self.complete_pivoting.isChecked())
         if self.main_combobox.currentText() == "LU-decomposition":
-           massage = MethodsFactory(self.decomposition_combobox.currentText(), service, n, a, b, initial, self.epsilon, self.iterations).create().execute()
+            massage = MethodsFactory(self.decomposition_combobox.currentText(), service, n, a, b, initial, self.epsilon,
+                                     self.iterations).create().execute()
         else:
-           massage = MethodsFactory(self.main_combobox.currentText(), service, n, a, b, initial, self.epsilon, self.iterations).create().execute()
+            massage = MethodsFactory(self.main_combobox.currentText(), service, n, a, b, initial, self.epsilon,
+                                     self.iterations).create().execute()
 
-
-        s = "\n".join(str(" ".join(str(itt) for itt in a[it])) + " " + str(b[it]) for it in range(n))
-
-        self.result_label.setText(s)
+        self.result_label.setText(massage + "\nTime taken: " + str(time.perf_counter() - start))
         self.result_label.adjustSize()
         self.scroll_area.resize(self.result_label.width(), self.result_label.height() + 5)
         MainWindow.setFixedHeight(self.scroll_area.height() + self.scroll_area.y() + 26)
         MainWindow.resize(MainWindow.width(), self.scroll_area.height() + self.scroll_area.y() + 26)
+
 
 if __name__ == "__main__":
     import sys
