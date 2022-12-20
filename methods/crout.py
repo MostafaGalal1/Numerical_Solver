@@ -10,7 +10,11 @@ class Crout(AbstractMethod):
         self.service = service
 
     def execute(self):
-        Doolittle(self.n, self.a, self.b, self.service).execute()
+        x = Doolittle(self.n, self.a, self.b, self.service).execute()
+        if x == "There is no solution":
+            return x
+        elif x == "Infinite no of solutions":
+            return x
 
         l = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
         u = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
