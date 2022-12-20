@@ -28,9 +28,13 @@ class Doolittle(AbstractMethod):
             str(" , ".join(str(itt) for itt in l[it])) for it in range(self.n)) + "\n\nU = \n" + "\n".join(
             str(" , ".join(str(itt) for itt in u[it])) for it in range(self.n))
 
-        GaussJordan(self.n, l, self.b, self.service).execute()
-        GaussJordan(self.n, u, self.b, self.service).execute()
-
+        x = GaussJordan(self.n, l, self.b, self.service).execute()
+        if x == "There is no solution":
+            return "There is no solution"
+        else:
+            x = GaussJordan(self.n, u, self.b, self.service).execute()
+        if x == "There is no solution":
+            return "There is no solution"
 
         ans = ans + "\n\nx = " + " , ".join(str(it) for it in self.b)
         return ans

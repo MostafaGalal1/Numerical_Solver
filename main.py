@@ -331,7 +331,7 @@ class Ui_MainWindow(object):
             massage = MethodsFactory(self.main_combobox.currentText(), service, n, a, b, initial, self.epsilon,
                                      self.iterations).create().execute()
 
-        self.result_label.setText(massage + "\nTime taken: " + str(time.time() - start))
+        self.result_label.setText(massage + "\n\nTime taken: " + str(time.time() - start))
         self.result_label.adjustSize()
         self.scroll_area.resize(self.result_label.width(), self.result_label.height() + 5)
         MainWindow.setFixedHeight(self.scroll_area.height() + self.scroll_area.y() + 26)

@@ -10,7 +10,10 @@ class Chelosky(AbstractMethod):
         self.service = service
 
     def execute(self):
-        Doolittle(self.n, self.a, self.b, self.service).execute()
+        x = Doolittle(self.n, self.a, self.b, self.service).execute()
+        if x == "There is no solution":
+            return "There is no solution"
+
         l = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
         u = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
         d = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
