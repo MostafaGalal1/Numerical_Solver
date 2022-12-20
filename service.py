@@ -45,15 +45,15 @@ class Service:
 
     def forward_elimination(self, n, a, b, o, decomposition):
         pivot = 0
+        ans = ""
         for k in range(n):
             if not decomposition:
                 if self.partial_pivoting:
                     Service.partial_pivoting(n, a, b, k)
                 elif self.complete_pivoting:
                     Service.complete_pivoting(n, a, b, k, o)
-                else:
-                    if a[k][k] == 0:
-                        return False
+            if a[k][k] == 0 and self.none_pivoting:
+                return False,None
             for i in range(k + 1, n):
                 if (not self.none_pivoting) and a[k][k + pivot] == 0:
                     pivot += 1
@@ -68,11 +68,12 @@ class Service:
                 if not decomposition:
                     b[i] = self.apply_precision(b[i] - mult * b[k])
 
-        return True
+                ans += "A | b = \n" + "\n".join(str(" , ".join(str(itt) for itt in a[it])) + " , " + str(b[it]) for it in range(n)) + "\n\n"
+        return True,ans
 
     def backward_elimination(self, n, a, b, o):
-        x = [0.0 for _ in range(n)]
-
+        x = [b[i] for i in range(n)]
+        ans = ""
         infinite = False
         for k in range(n - 1, -1, -1):
             if a[k][k] != 0:
@@ -83,16 +84,18 @@ class Service:
                     infinite = True
                     continue
                 else:
-                    return "There is no solution"
+                    return "There is no solution",None
             for i in range(k - 1, -1, -1):
                 b[i] = self.apply_precision(b[i] - a[i][k] * b[k])
+                x[o[i]] = b[i]
                 a[i][k] = 0
             x[o[k]] = b[k]
+            ans += "A | b = \n" + "\n".join(str(" , ".join(str(itt) for itt in a[it])) + " , " + str(x[it]) for it in range(n)) + "\n\n"
 
         if infinite:
-            return "Infinite no of solutions"
+            return "Infinite no of solutions",None
 
-        return x
+        return x,ans
 
     def backward_substitution(self, n, a, b, o):
         x = [0.0 for _ in range(n)]

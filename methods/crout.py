@@ -10,11 +10,9 @@ class Crout(AbstractMethod):
         self.service = service
 
     def execute(self):
-        x = Doolittle(self.n, self.a, self.b, self.service).execute()
-        if x == "There is no solution":
-            return x
-        elif x == "Infinite no of solutions":
-            return x
+        flag,ans = self.service.forward_elimination(self.n, self.a, [0 for _ in range(self.n)], [0 for _ in range(self.n)], True)
+        if not flag:
+           return "There is no solution"
 
         l = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
         u = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
@@ -28,7 +26,23 @@ class Crout(AbstractMethod):
                 elif i < j:
                     l[j][i] = self.a[i][j]
 
-        ans = "L = \n" + "\n".join(
+        ans += "L = \n" + "\n".join(
             str(" , ".join(str(itt) for itt in l[it])) for it in range(self.n)) + "\n\nU = \n" + "\n".join(
             str(" , ".join(str(itt) for itt in u[it])) for it in range(self.n)) + "\n\nx = " + " , ".join(str(it) for it in self.b)
+
+        x = GaussJordan(self.n, l, self.b, self.service).execute()
+        if x == "There is no solution":
+            return x
+        elif x == "Infinite no of solutions":
+            return x
+
+        ans += "\n\nY = " + " , ".join(str(it) for it in self.b)
+        print(self.b)
+        x = GaussJordan(self.n, u, self.b, self.service).execute()
+        if x == "There is no solution":
+            return x
+        elif x == "Infinite no of solutions":
+            return x
+
+        ans += "\n\nX = " + " , ".join(str(it) for it in self.b)
         return ans
