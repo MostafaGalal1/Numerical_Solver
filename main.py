@@ -327,8 +327,8 @@ class Ui_MainWindow(object):
             else:
                 initial = [0.0 for _ in range(n)]
 
-        service = Service(self.precision_spinbox.value(), self.partial_pivoting.isChecked(),
-                          self.complete_pivoting.isChecked())
+        service = Service(self.precision_spinbox.value(), self.none_pivoting.isChecked(), self.partial_pivoting.isChecked()
+                                                                                                    , self.complete_pivoting.isChecked())
         if self.main_combobox.currentText() == "LU-decomposition":
             massage = MethodsFactory(self.decomposition_combobox.currentText(), service, n, a, b, initial, self.epsilon,
                                      self.iterations).create().execute()

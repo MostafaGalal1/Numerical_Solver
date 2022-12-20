@@ -3,8 +3,9 @@ import numpy as np
 
 class Service:
 
-    def __init__(self, precision, partial_pivoting, complete_pivoting):
+    def __init__(self, precision, none_pivoting, partial_pivoting, complete_pivoting):
         self.precision = precision
+        self.none_pivoting = none_pivoting
         self.partial_pivoting = partial_pivoting
         self.complete_pivoting = complete_pivoting
 
@@ -42,33 +43,49 @@ class Service:
             a[i][k], a[i][col] = a[i][col], a[i][k]
 
     def forward_elimination(self, n, a, b, o, decomposition):
+        pivot = 0
         for k in range(n):
             if not decomposition:
                 if self.partial_pivoting:
-                   Service.partial_pivoting(n, a, b, k)
+                    Service.partial_pivoting(n, a, b, k)
                 elif self.complete_pivoting:
-                   Service.complete_pivoting(n, a, b, k, o)
-                if a[k][k] == 0:
-                    return False
-            for i in range(k + 1, n):
-                mult = self.apply_precision(a[i][k] / a[k][k])
-                if decomposition:
-                    a[i][k] = mult
+                    Service.complete_pivoting(n, a, b, k, o)
                 else:
-                    a[i][k] = 0
-                for j in range(k + 1, n):
+                    if a[k][k] == 0:
+                        return 2
+            for i in range(k + 1, n):
+                if (not self.none_pivoting) and a[k][k+pivot] == 0:
+                    pivot += 1
+                    continue
+                mult = self.apply_precision(a[i][k+pivot] / a[k][k+pivot])
+                if decomposition:
+                    a[i][k+pivot] = mult
+                else:
+                    a[i][k+pivot] = 0
+                for j in range(k + pivot + 1, n):
                     a[i][j] = self.apply_precision(a[i][j] - mult * a[k][j])
                 if not decomposition:
                     b[i] = self.apply_precision(b[i] - mult * b[k])
 
-        return True
+        if a[n-1][n-1] == 0:
+            if b[n-1] == 0:
+                return 1
+            else:
+                return 2
+        return 0
 
     def backward_elimination(self, n, a, b, o):
         x = [0.0 for _ in range(n)]
 
         for k in range(n - 1, -1, -1):
-            b[k] = self.apply_precision(b[k] / a[k][k])
-            a[k][k] = 1
+            if a[k][k] != 0:
+                b[k] = self.apply_precision(b[k] / a[k][k])
+                a[k][k] = 1
+            else:
+                if b[k] == 0:
+                    return 2
+                else:
+                    return 1
             for i in range(k - 1, -1, -1):
                 b[i] = self.apply_precision(b[i] - a[i][k] * b[k])
                 a[i][k] = 0
@@ -79,12 +96,18 @@ class Service:
     def backward_substitution(self, n, a, b, o):
         x = [0.0 for _ in range(n)]
 
-        x[n - 1] = self.apply_precision(b[n - 1] / a[n - 1][n - 1])
-        for i in range(n - 1, -1, -1):
-            tot = 0
-            for j in range(i + 1, n):
-                tot = self.apply_precision(tot + x[j] * a[i][j])
-            x[o[i]] = self.apply_precision((b[i] - tot) / a[i][i])
+        for k in range(n - 1, -1, -1):
+            if a[k][k] != 0:
+                b[k] = self.apply_precision(b[k] / a[k][k])
+                a[k][k] = 1
+            else:
+                if b[k] == 0:
+                    return 2
+                else:
+                    return 1
+            for i in range(k - 1, -1, -1):
+                b[i] = self.apply_precision(b[i] - a[i][k] * b[k])
+                a[i][k] = 0
+            x[o[k]] = b[k]
 
         return x
-

@@ -11,8 +11,13 @@ class GaussJordan(AbstractMethod):
     def execute(self):
         o = [i for i in range(self.n)]
 
-        if self.service.forward_elimination(self.n, self.a, self.b, o, False):
+        sol = self.service.forward_elimination(self.n, self.a, self.b, o, False)
+        if sol == 0:
             x = self.service.backward_elimination(self.n, self.a, self.b, o)
+            if x == "There is no solution":
+                return x
+        elif sol == 1:
+            return "Infinite no of solutions"
         else:
             return "There is no solution"
 
