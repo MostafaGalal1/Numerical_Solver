@@ -26,5 +26,5 @@ class Crout(AbstractMethod):
 
         ans = "L = \n" + "\n".join(
             str(" , ".join(str(itt) for itt in l[it])) for it in range(self.n)) + "\n\nU = \n" + "\n".join(
-            str(" , ".join(str(itt) for itt in u[it])) for it in range(self.n)) + "\n\nx = \n" + " , ".join(str(itt) for itt in x)
+            str(" , ".join(str(itt) for itt in u[it])) for it in range(self.n)) + "\n\nx = " + " , ".join(str(it) for it in self.b)
         return ans
