@@ -17,30 +17,36 @@ class Jacobi(AbstractMethod):
         x_new = [0.0 for _ in range(self.n)]
         x_old = self.initial_guess
         iteration = 0
+        steps = ""
         while iteration < self.max_iteration:
             iteration += 1
             counter = 0
+            steps += "Iteration Number " + str(iteration) + ": \n"
             for i in range(self.n):
                 numerator = self.b[i]
                 for j in range(self.n):
                     if i != j:
                         numerator = self.service.apply_precision(numerator - self.a[i][j] * x_old[j])
+                steps += "x" + str(i) + " = " + str(numerator) + " / " + str(self.a[i][i]) + " = "
                 try:
                     x_new[i] = self.service.apply_precision(numerator / self.a[i][i])
                 except ZeroDivisionError:
-                    return "x = infinity"+", infinity"*len(x_new)
+                    return "x = infinity" + ", infinity" * len(x_new)
+                steps += str(x_new[i]) + "\n"
                 if x_new[i] != 0:
                     relative_error[i] = self.service.apply_precision(abs((x_new[i] - x_old[i]) / x_new[i]))
                 else:
                     relative_error[i] = 0.0
                 if relative_error[i] <= self.epsilon:
                     counter += 1
+                steps += "Relative_error(x" + str(i) + ") = " + str(relative_error[i]) + "\n"
 
             if counter == self.n:
                 break
 
             for i in range(self.n):
                 x_old[i] = x_new[i]
+            steps+="________________________________\n"
 
-        ans = "approximation of x =  " + " , ".join(str(itt) for itt in x_new)
+        ans = steps + "approximation of x =  " + " , ".join(str(itt) for itt in x_new)
         return ans
