@@ -12,4 +12,4 @@ class Chelosky(AbstractMethod):
         Doolittle(self.n, self.a, self.service).execute()
         for i in range(self.n):
             for j in range(i + 1, self.n):
-               self.a[i][j] = self.service.apply_precision(self, self.a[i][j] / self.a[i][i])
+               self.a[i][j] = self.service.apply_precision(self.a[i][j] / self.a[i][i])

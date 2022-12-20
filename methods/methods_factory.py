@@ -28,7 +28,7 @@ class MethodsFactory:
         elif self.method == "gauss-seidel":
             return GaussSeidel(self.n, self.a, self.b, self.initial, self.epsilon, self.iterations, self.service)
         elif self.method == "doolittle form":
-            return Doolittle(self.n, self.a, self.service)
+            return Doo,little(self.n, self.a, self.service)
         elif self.method == "crout form":
             return Crout(self.n, self.a, self.service)
         elif self.method == "cholesky form":

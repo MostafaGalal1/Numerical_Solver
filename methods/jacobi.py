@@ -15,7 +15,7 @@ class Jacobi(AbstractMethod):
         relative_error = [0.0 for _ in range(self.n)]
         x_new = [0.0 for _ in range(self.n)]
         x_old = self.initial_guess
-
+        print("epsilon "+str(self.epsilon))
         iteration = 0
         while iteration < self.max_iteration:
             iteration += 1
