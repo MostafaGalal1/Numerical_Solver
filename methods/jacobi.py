@@ -27,7 +27,10 @@ class Jacobi(AbstractMethod):
                     if i != j:
                         numerator = self.service.apply_precision(numerator - self.a[i][j] * x_old[j])
                 x_new[i] = self.service.apply_precision(numerator / self.a[i][i])
-                relative_error[i] = self.service.apply_precision(abs((x_new[i] - x_old[i]) / x_new[i]))
+                if x_new[i] != 0:
+                    relative_error[i] = self.service.apply_precision(abs((x_new[i] - x_old[i]) / x_new[i]))
+                else:
+                    relative_error[i] = 0.0
                 if relative_error[i] <= self.epsilon:
                     counter += 1
 
@@ -36,9 +39,6 @@ class Jacobi(AbstractMethod):
 
             for i in range(self.n):
                 x_old[i] = x_new[i]
-
-        for i in range(self.n):
-            print(x_new[i])
 
         ans = "approximation of x =  " + " , ".join(str(itt) for itt in x_new)
         return ans
