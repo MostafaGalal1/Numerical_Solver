@@ -10,7 +10,8 @@ class Service:
         self.complete_pivoting = complete_pivoting
 
     def apply_precision(self, num):
-        return float(np.format_float_positional(num, precision=self.precision, unique=False, fractional=False, trim='k'))
+        return float(
+            np.format_float_positional(num, precision=self.precision, unique=False, fractional=False, trim='k'))
 
     @staticmethod
     def partial_pivoting(n, a, b, k):
@@ -52,62 +53,72 @@ class Service:
                     Service.complete_pivoting(n, a, b, k, o)
                 else:
                     if a[k][k] == 0:
-                        return 2
+                        return False
             for i in range(k + 1, n):
-                if (not self.none_pivoting) and a[k][k+pivot] == 0:
+                if (not self.none_pivoting) and a[k][k + pivot] == 0:
                     pivot += 1
                     continue
-                mult = self.apply_precision(a[i][k+pivot] / a[k][k+pivot])
+                mult = self.apply_precision(a[i][k + pivot] / a[k][k + pivot])
                 if decomposition:
-                    a[i][k+pivot] = mult
+                    a[i][k + pivot] = mult
                 else:
-                    a[i][k+pivot] = 0
+                    a[i][k + pivot] = 0
                 for j in range(k + pivot + 1, n):
                     a[i][j] = self.apply_precision(a[i][j] - mult * a[k][j])
                 if not decomposition:
                     b[i] = self.apply_precision(b[i] - mult * b[k])
 
-        if a[n-1][n-1] == 0:
-            if b[n-1] == 0:
-                return 1
-            else:
-                return 2
-        return 0
+        return True
 
     def backward_elimination(self, n, a, b, o):
         x = [0.0 for _ in range(n)]
 
+        infinite = False
         for k in range(n - 1, -1, -1):
             if a[k][k] != 0:
                 b[k] = self.apply_precision(b[k] / a[k][k])
                 a[k][k] = 1
             else:
                 if b[k] == 0:
-                    return 2
+                    infinite = True
+                    continue
                 else:
-                    return 1
+                    return "There is no solution"
             for i in range(k - 1, -1, -1):
                 b[i] = self.apply_precision(b[i] - a[i][k] * b[k])
                 a[i][k] = 0
             x[o[k]] = b[k]
+
+        if infinite:
+            return "Infinite no of solutions"
 
         return x
 
     def backward_substitution(self, n, a, b, o):
         x = [0.0 for _ in range(n)]
 
-        for k in range(n - 1, -1, -1):
-            if a[k][k] != 0:
-                b[k] = self.apply_precision(b[k] / a[k][k])
-                a[k][k] = 1
+        infinite = False
+        if a[n - 1][n - 1] != 0:
+            x[n - 1] = self.apply_precision(b[n - 1] / a[n - 1][n - 1])
+        else:
+            if b[n - 1] == 0:
+                infinite = True
             else:
-                if b[k] == 0:
-                    return 2
+                return "There is no solution"
+
+        for i in range(n - 1, -1, -1):
+            tot = 0
+            for j in range(i + 1, n):
+                tot = self.apply_precision(tot + x[j] * a[i][j])
+            if a[i][i] != 0:
+                x[o[i]] = self.apply_precision((b[i] - tot) / a[i][i])
+            else:
+                if b[i] - tot == 0:
+                    infinite = True
                 else:
-                    return 1
-            for i in range(k - 1, -1, -1):
-                b[i] = self.apply_precision(b[i] - a[i][k] * b[k])
-                a[i][k] = 0
-            x[o[k]] = b[k]
+                    return "There is no solution"
+
+        if infinite:
+            return "Infinite no of solutions"
 
         return x

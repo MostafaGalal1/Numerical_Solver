@@ -11,13 +11,10 @@ class GaussElimination(AbstractMethod):
     def execute(self):
         o = [i for i in range(self.n)]
 
-        sol = self.service.forward_elimination(self.n, self.a, self.b, o, False)
-        if sol == 0:
+        if self.service.forward_elimination(self.n, self.a, self.b, o, False):
             x = self.service.backward_substitution(self.n, self.a, self.b, o)
-            if x == "There is no solution":
+            if x == "There is no solution" or x == "Infinite no of solutions":
                 return x
-        elif sol == 1:
-            return "Infinite no of solution"
         else:
             return "There is no solution"
 
