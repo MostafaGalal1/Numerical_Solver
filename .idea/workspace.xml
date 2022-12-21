@@ -5,10 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/methods/chelosky.py" beforeDir="false" afterPath="$PROJECT_DIR$/methods/chelosky.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/methods/crout.py" beforeDir="false" afterPath="$PROJECT_DIR$/methods/crout.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/methods/doolittle.py" beforeDir="false" afterPath="$PROJECT_DIR$/methods/doolittle.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/methods/gauss_elimination.py" beforeDir="false" afterPath="$PROJECT_DIR$/methods/gauss_elimination.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/methods/gauss_jordan.py" beforeDir="false" afterPath="$PROJECT_DIR$/methods/gauss_jordan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service.py" beforeDir="false" afterPath="$PROJECT_DIR$/service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
