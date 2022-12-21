@@ -35,7 +35,7 @@ class Doolittle(AbstractMethod):
             return x
         elif x == "Infinite no of solutions":
             return x
-        print(self.b)
+
         ans += "\n\nY = " + " , ".join(str(it) for it in self.b)
         x = GaussJordan(self.n, u, self.b, self.service).execute()
         if x == "There is no solution":

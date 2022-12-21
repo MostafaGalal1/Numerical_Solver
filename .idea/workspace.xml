@@ -5,6 +5,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/methods/chelosky.py" beforeDir="false" afterPath="$PROJECT_DIR$/methods/chelosky.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/methods/crout.py" beforeDir="false" afterPath="$PROJECT_DIR$/methods/crout.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/methods/doolittle.py" beforeDir="false" afterPath="$PROJECT_DIR$/methods/doolittle.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service.py" beforeDir="false" afterPath="$PROJECT_DIR$/service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +28,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/pc/OneDrive-AlexandriaUniversity/Documents/GitHub/Numerical_Solver/main.py&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/pc/OneDrive-AlexandriaUniversity/Documents/GitHub/SimpleFSDB&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>

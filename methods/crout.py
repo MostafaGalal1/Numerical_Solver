@@ -36,12 +36,14 @@ class Crout(AbstractMethod):
             str(" , ".join(str(itt) for itt in l[it])) for it in range(self.n)) + "\n\nU = \n" + "\n".join(
             str(" , ".join(str(itt) for itt in u[it])) for it in range(self.n)) + "\n\nx = " + " , ".join(
             str(it) for it in self.b)
+
         x = GaussJordan(self.n, l, self.b, self.service).execute()
         if x == "There is no solution":
             return x
         elif x == "Infinite no of solutions":
             return x
         ans += "\n\nY = " + " , ".join(str(it) for it in self.b)
+
         x = GaussJordan(self.n, u, self.b, self.service).execute()
         if x == "There is no solution":
             return x
