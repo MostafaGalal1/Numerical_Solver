@@ -100,7 +100,6 @@ class Service:
     def forward_substitution(self, n, a, b, o):
         x = [0.0 for _ in range(n)]
 
-
         infinite = False
         if a[0][0] != 0:
             x[0] = self.apply_precision(b[0] / a[0][0])
@@ -114,7 +113,16 @@ class Service:
             tot = 0
             for j in range(i):
                 tot = self.apply_precision(tot + x[j] * a[i][j])
-            x[o[i]] = self.apply_precision((b[i] - tot) / a[i][i])
+            if a[i][i] != 0:
+                x[o[i]] = self.apply_precision((b[i] - tot) / a[i][i])
+            else:
+                if b[i] - tot == 0:
+                    infinite = True
+                else:
+                    return "There is no solution"
+
+        if infinite:
+            return "Infinite no of solutions"
 
         return x
 

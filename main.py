@@ -1,11 +1,9 @@
 import ast
 import time
-
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QVBoxLayout
 import ctypes
-from decimal import Decimal
 from service import *
 from methods.methods_factory import *
 
@@ -168,7 +166,7 @@ class Ui_MainWindow(object):
 
         self.precision_label.setText(_translate("MainWindow", "Precision:"))
         self.max_iteration_label.setText(_translate("MainWindow", "Iterations No:"))
-        self.relative_error_label.setText(_translate("MainWindow", "Relative error (x10e-3):"))
+        self.relative_error_label.setText(_translate("MainWindow", "Relative error (10^-):"))
         self.decomposition_label.setText(_translate("MainWindow", "Decomposition form:"))
 
         self.precision_spinbox.setMaximum(10)

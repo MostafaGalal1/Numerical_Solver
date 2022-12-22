@@ -7,8 +7,7 @@ class GaussSeidel(AbstractMethod):
         self.a = a
         self.b = b
         self.initial_guess = initial
-        # Here we are dividing by 1000 because the value of epsilon does not go below 1 in the GUI
-        self.epsilon = epsilon / 1000
+        self.epsilon = epsilon
         self.max_iteration = iterations
         self.service = service
 
@@ -38,7 +37,7 @@ class GaussSeidel(AbstractMethod):
                     relative_error[i] = self.service.apply_precision(abs((x[i] - x_tmp) / x[i]))
                 else:
                     relative_error[i] = 0.0
-                if relative_error[i] <= self.epsilon:
+                if relative_error[i] <= pow(10, -self.epsilon):
                     counter += 1
                 steps += "Relative_error(x" + str(i) + ") = " + str(relative_error[i]) + "\n"
                 
