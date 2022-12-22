@@ -30,7 +30,7 @@ class Jacobi(AbstractMethod):
                 try:
                     x_new[i] = self.service.apply_precision(numerator / self.a[i][i])
                 except ZeroDivisionError:
-                    return "x = infinity" + ", infinity" * len(x_new)
+                    return "There is no solution"
                 steps += str(x_new[i]) + "\n"
                 if x_new[i] != 0:
                     relative_error[i] = self.service.apply_precision(abs((x_new[i] - x_old[i]) / x_new[i]))

@@ -31,7 +31,7 @@ class GaussSeidel(AbstractMethod):
                 try:
                     x[i] = self.service.apply_precision(numerator / self.a[i][i])
                 except ZeroDivisionError:
-                    return "x = infinity"+", infinity"*len(x)
+                    return "There is no solution"
                 steps += str(x[i]) + "\n"
                 if x[i] != 0:
                     relative_error[i] = self.service.apply_precision(abs((x[i] - x_tmp) / x[i]))
