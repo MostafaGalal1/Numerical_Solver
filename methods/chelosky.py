@@ -10,12 +10,11 @@ class Chelosky(AbstractMethod):
         self.service = service
 
     def execute(self):
-        tempB = self.b[:]
-        x = Doolittle(self.n, self.a, self.b, self.service).execute()
-        if x == "There is no solution":
-            return x
-        elif x == "Infinite no of solutions":
-            return x
+        o = [i for i in range(self.n)]
+        flag,ans = self.service.forward_elimination(self.n, self.a, self.b, o, True)
+        if not flag:
+           return "There is no solution"
+
         l = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
         u = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
         d = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
@@ -31,30 +30,31 @@ class Chelosky(AbstractMethod):
                 elif i > j:
                     l[i][j] = self.a[i][j]
 
-        ans = "L = \n" + "\n".join(
+        ans += "L = \n" + "\n".join(
             str(" , ".join(str(itt) for itt in l[it])) for it in range(self.n)) + "\n\nD = \n" + "\n".join(
             str(" , ".join(str(itt) for itt in d[it])) for it in range(self.n)) + "\n\nU = \n" + "\n".join(
-            str(" , ".join(str(itt) for itt in u[it])) for it in range(self.n)) 
+            str(" , ".join(str(itt) for itt in u[it])) for it in range(self.n))
 
-        x = GaussJordan(self.n, l, tempB, self.service).execute()
+        x = self.service.forward_substitution(self.n, l, self.b, o)
         if x == "There is no solution":
-            return x
+            return ans + "\n\n" + x
         elif x == "Infinite no of solutions":
-            return x
+            return ans + "\n\n" + x
 
-        ans += "\n\nZ = " + " , ".join(str(it) for it in tempB)
-        x = GaussJordan(self.n, d, tempB, self.service).execute()
-        if x == "There is no solution":
-            return x
-        elif x == "Infinite no of solutions":
-            return x
+        ans += "\n\nZ = " + " , ".join(str(it) for it in x)
 
-        ans += "\n\nY = " + " , ".join(str(it) for it in tempB)
-        x = GaussJordan(self.n, u, tempB, self.service).execute()
-        if x == "There is no solution":
-            return x
-        elif x == "Infinite no of solutions":
-            return x
+        for i in range (self.n):
+            try:
+                x[i] = self.service.apply_precision(x[i]  / d[i][i])
+            except ZeroDivisionError:
+                return ans + "\n\n" + "Infinite no of solutions"
+        ans += "\n\nY = " + " , ".join(str(it) for it in x)
 
-        ans += "\n\nX = " + " , ".join(str(it) for it in tempB)
+        y = self.service.backward_substitution(self.n, u, x, o)
+        if y == "There is no solution":
+            return ans + "\n\n" + y
+        elif y == "Infinite no of solutions":
+            return ans + "\n\n" + y
+
+        ans += "\n\nX = " + " , ".join(str(it) for it in y)
         return ans

@@ -1,6 +1,5 @@
 from methods.abstract_method import *
 from methods.gauss_elimination import *
-from methods.gauss_jordan import *
 
 class Doolittle(AbstractMethod):
     def __init__(self, n, a, b, service):
@@ -10,7 +9,8 @@ class Doolittle(AbstractMethod):
         self.service = service
 
     def execute(self):
-        flag,ans = self.service.forward_elimination(self.n, self.a, [0 for _ in range(self.n)], [0 for _ in range(self.n)], True)
+        o = [i for i in range(self.n)]
+        flag,ans = self.service.forward_elimination(self.n, self.a, self.b, o, True)
         if not flag:
            return "There is no solution"
 
@@ -30,18 +30,19 @@ class Doolittle(AbstractMethod):
             str(" , ".join(str(itt) for itt in l[it])) for it in range(self.n)) + "\n\nU = \n" + "\n".join(
             str(" , ".join(str(itt) for itt in u[it])) for it in range(self.n))
 
-        x = GaussJordan(self.n, l, self.b, self.service).execute()
+        x = self.service.forward_substitution(self.n, l, self.b, o)
         if x == "There is no solution":
-            return x
+            return ans + "\n\n" + x
         elif x == "Infinite no of solutions":
-            return x
+            return ans + "\n\n" + x
 
-        ans += "\n\nY = " + " , ".join(str(it) for it in self.b)
-        x = GaussJordan(self.n, u, self.b, self.service).execute()
-        if x == "There is no solution":
-            return x
-        elif x == "Infinite no of solutions":
-            return x
+        ans += "\n\nY = " + " , ".join(str(it) for it in x)
 
-        ans += "\n\nX = " + " , ".join(str(it) for it in self.b)
+        y = self.service.backward_substitution(self.n, u, x, o)
+        if y == "There is no solution":
+            return ans + "\n\n" + y
+        elif y == "Infinite no of solutions":
+            return ans + "\n\n" + y
+
+        ans += "\n\nX = " + " , ".join(str(it) for it in y)
         return ans
