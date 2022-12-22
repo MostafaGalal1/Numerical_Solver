@@ -47,26 +47,26 @@ class Service:
         pivot = 0
         ans = ""
         for k in range(n):
-            if not decomposition:
-                if self.partial_pivoting:
-                    Service.partial_pivoting(n, a, b, k)
-                elif self.complete_pivoting:
-                    Service.complete_pivoting(n, a, b, k, o)
+            if self.partial_pivoting:
+                Service.partial_pivoting(n, a, b, k)
+            elif self.complete_pivoting:
+                Service.complete_pivoting(n, a, b, k, o)
+
             if a[k][k] == 0 and self.none_pivoting:
                 return False,None
             for i in range(k + 1, n):
-                if (not self.none_pivoting) and a[k][k + pivot] == 0:
+                if (not self.none_pivoting) and a[k - pivot][k] == 0:
                     pivot += 1
                     continue
-                mult = self.apply_precision(a[i][k + pivot] / a[k][k + pivot])
+                mult = self.apply_precision(a[i - pivot][k] / a[k - pivot][k])
                 if decomposition:
-                    a[i][k + pivot] = mult
+                    a[i - pivot][k] = mult
                 else:
-                    a[i][k + pivot] = 0
-                for j in range(k + pivot + 1, n):
-                    a[i][j] = self.apply_precision(a[i][j] - mult * a[k][j])
+                    a[i - pivot][k] = 0
+                for j in range(k + 1, n):
+                    a[i-pivot][j] = self.apply_precision(a[i-pivot][j] - mult * a[k-pivot][j])
                 if not decomposition:
-                    b[i] = self.apply_precision(b[i] - mult * b[k])
+                    b[i-pivot] = self.apply_precision(b[i-pivot] - mult * b[k-pivot])
 
                 ans += "A | b = \n" + "\n".join(str(" , ".join(str(itt) for itt in a[it])) + " , " + str(b[it]) for it in range(n)) + "\n\n"
         return True,ans

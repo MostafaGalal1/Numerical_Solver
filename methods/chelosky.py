@@ -12,8 +12,9 @@ class Chelosky(AbstractMethod):
     def execute(self):
         o = [i for i in range(self.n)]
         flag,ans = self.service.forward_elimination(self.n, self.a, self.b, o, True)
-        if not flag:
-           return "There is no solution"
+        x = self.service.backward_substitution(self.n,self.a,self.b,o)
+        if x == "There is no solution" or x == "Infinite no of solutions":
+           return "Matrix can't be decomposed"
 
         l = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
         u = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
@@ -47,7 +48,7 @@ class Chelosky(AbstractMethod):
             try:
                 x[i] = self.service.apply_precision(x[i]  / d[i][i])
             except ZeroDivisionError:
-                return ans + "\n\n" + "Infinite no of solutions"
+                return ans + "\n\n" + ("Infinite no of solutions" if x[i] == 0 else "There is no solution")
         ans += "\n\nY = " + " , ".join(str(it) for it in x)
 
         y = self.service.backward_substitution(self.n, u, x, o)

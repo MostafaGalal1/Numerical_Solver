@@ -11,8 +11,9 @@ class Doolittle(AbstractMethod):
     def execute(self):
         o = [i for i in range(self.n)]
         flag,ans = self.service.forward_elimination(self.n, self.a, self.b, o, True)
-        if not flag:
-           return "There is no solution"
+        x = self.service.backward_substitution(self.n,self.a,self.b,o)
+        if x == "There is no solution" or x == "Infinite no of solutions":
+           return "Matrix can't be decomposed"
 
         l = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
         u = [[0.0 for _ in range(self.n)] for _ in range(self.n)]

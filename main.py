@@ -212,6 +212,7 @@ class Ui_MainWindow(object):
         self.relative_error_spinbox.setValue(self.default_epsilon)
 
         if self.main_combobox.currentIndex() == 0 or self.main_combobox.currentIndex() == 1:
+            self.none_pivoting.setChecked(True)
             self.pivoting_type_label.show()
             self.none_pivoting.show()
             self.partial_pivoting.show()
@@ -231,6 +232,7 @@ class Ui_MainWindow(object):
         elif self.main_combobox.currentIndex() == 3 or self.main_combobox.currentIndex() == 4:
             self.initial_guess_label.show()
             self.initial_guess_textbox.show()
+            self.partial_pivoting.setChecked(True)
 
             self.pivoting_type_label.hide()
             self.none_pivoting.hide()
@@ -246,6 +248,7 @@ class Ui_MainWindow(object):
             self.relative_error_label.show()
             self.relative_error_spinbox.show()
         else:
+            self.none_pivoting.setChecked(True)
             self.decomposition_label.show()
             self.decomposition_combobox.show()
 
@@ -271,7 +274,6 @@ class Ui_MainWindow(object):
         if coff[0].find(',') == -1:
             coff[0] += ','
             return
-
         n = 0
         a = []
         b = []
