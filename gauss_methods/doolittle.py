@@ -1,8 +1,7 @@
-from methods.abstract_method import *
-from methods.doolittle import *
+from factories.abstract_method import *
+from gauss_methods.gauss_elimination import *
 
-
-class Crout(AbstractMethod):
+class Doolittle(AbstractMethod):
     def __init__(self, n, a, b, service):
         self.n = n
         self.a = a
@@ -18,16 +17,15 @@ class Crout(AbstractMethod):
 
         l = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
         u = [[0.0 for _ in range(self.n)] for _ in range(self.n)]
-
         for i in range(self.n):
             for j in range(self.n):
                 if i == j:
-                    u[i][j] = 1.0
-                    l[i][j] = self.a[i][j]
+                    l[i][j] = 1.0
+                    u[i][j] = self.a[i][j]
                 elif i < j:
-                    u[i][j] = self.a[i][j]/self.a[i][i]
+                    u[i][j] = self.a[i][j]
                 elif i > j:
-                    l[i][j] = self.a[i][j]*self.a[j][j]
+                    l[i][j] = self.a[i][j]
 
         ans += "L = \n" + "\n".join(
             str(" , ".join(str(itt) for itt in l[it])) for it in range(self.n)) + "\n\nU = \n" + "\n".join(
