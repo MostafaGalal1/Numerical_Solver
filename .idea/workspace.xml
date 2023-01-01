@@ -4,17 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e964601d-1dcd-4211-8a39-b21b593a64fd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Numerical_Solver.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Numerical_Solver.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="e964601d-1dcd-4211-8a39-b21b593a64fd" name="Changes" comment="Zero Division in gauss seidel and jacobi">
+      <change afterPath="$PROJECT_DIR$/bracketing and open methods/Bisection.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bracketing and open methods/False Position.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bracketing and open methods/Fixed Point.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/methods/gauss_seidel.py" beforeDir="false" afterPath="$PROJECT_DIR$/methods/gauss_seidel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/methods/jacobi.py" beforeDir="false" afterPath="$PROJECT_DIR$/methods/jacobi.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -74,8 +80,17 @@
       <option name="presentableId" value="Default" />
       <updated>1671553949891</updated>
       <workItem from="1671696727137" duration="4529000" />
-      <workItem from="1671707808688" duration="451000" />
+      <workItem from="1671707808688" duration="4568000" />
+      <workItem from="1672563016081" duration="12408000" />
     </task>
+    <task id="LOCAL-00001" summary="Zero Division in gauss seidel and jacobi">
+      <created>1671708353101</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1671708353101</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -92,7 +107,11 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Zero Division in gauss seidel and jacobi" />
+    <option name="LAST_COMMIT_MESSAGE" value="Zero Division in gauss seidel and jacobi" />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Numerical_Solver$main.coverage" NAME="main Coverage Results" MODIFIED="1671707959770" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Numerical_Solver$main.coverage" NAME="main Coverage Results" MODIFIED="1672563102605" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
