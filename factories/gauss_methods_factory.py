@@ -1,13 +1,13 @@
-from methods.gauss_elimination import *
-from methods.gauss_jordan import *
-from methods.jacobi import *
-from methods.gauss_seidel import *
-from methods.doolittle import *
-from methods.crout import *
-from methods.chelosky import *
+from gauss_methods.gauss_elimination import *
+from gauss_methods.gauss_jordan import *
+from gauss_methods.jacobi import *
+from gauss_methods.gauss_seidel import *
+from gauss_methods.doolittle import *
+from gauss_methods.crout import *
+from gauss_methods.chelosky import *
 
 
-class MethodsFactory:
+class GaussFactory:
     def __init__(self, method, service, n, a, b, initial=None, epsilon=None, iterations=None):
         self.method = method.lower()
         self.service = service

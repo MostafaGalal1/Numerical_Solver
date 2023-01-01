@@ -4,8 +4,8 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QVBoxLayout
 import ctypes
-from service import *
-from methods.methods_factory import *
+from gauss_methods.service import *
+from factories.gauss_methods_factory import *
 
 my_app_id = "mycompany.myproduct.subproduct.version"
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(my_app_id)
@@ -330,10 +330,10 @@ class Ui_MainWindow(object):
         service = Service(self.precision_spinbox.value(), self.none_pivoting.isChecked(), self.partial_pivoting.isChecked()
                                                                                                     , self.complete_pivoting.isChecked())
         if self.main_combobox.currentText() == "LU-decomposition":
-            massage = MethodsFactory(self.decomposition_combobox.currentText(), service, n, a, b, initial, self.epsilon,
+            massage = GaussFactory(self.decomposition_combobox.currentText(), service, n, a, b, initial, self.epsilon,
                                      self.iterations).create().execute()
         else:
-            massage = MethodsFactory(self.main_combobox.currentText(), service, n, a, b, initial, self.epsilon,
+            massage = GaussFactory(self.main_combobox.currentText(), service, n, a, b, initial, self.epsilon,
                                      self.iterations).create().execute()
 
         self.result_label.setText(massage + "\nTime taken: " + str(time.perf_counter() - start))

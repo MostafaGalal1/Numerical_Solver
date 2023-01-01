@@ -1,4 +1,4 @@
-from methods.abstract_method import *
+from factories.abstract_method import *
 
 
 class GaussSeidel(AbstractMethod):
