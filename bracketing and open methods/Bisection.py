@@ -1,4 +1,4 @@
-from methods.abstract_method import *
+from factories.abstract_method import AbstractMethod
 import math
 
 
@@ -13,7 +13,7 @@ class Bisection(AbstractMethod):
 
     def execute(self):
         f = lambda x: eval(self.function)  # this is the function
-        relative_error = 0
+        absolute_error = 0
         iteration = 0
         x_r_new = 0
         x_r_old = 0
@@ -31,10 +31,10 @@ class Bisection(AbstractMethod):
             steps += "f(x_l) = " + str(f(x_l)) + " | f(x_u) = " + str(f(x_u)) + " | f(x_r) = " + str(f(x_r_new)) + "\n"
             if iteration != 1:
                 try:
-                    relative_error = self.service.apply_precision(abs(x_r_new - x_r_old) / abs(x_r_new))
-                    steps = "Relative_error = " + str(relative_error * 100) + " % " + "\n"
+                    absolute_error = self.service.apply_precision(abs(x_r_new - x_r_old))
+                    steps = "absolute_error = " + str(absolute_error) + "\n"
                 except ZeroDivisionError:
-                    steps = "Relative_error = ----" + "\n"
+                    steps = "absolute_error = ----" + "\n"
             steps += "________________________________\n"
             if abs(x_r_new - x_r_old) <= pow(10, -self.epsilon):   # epsilon is the number of digits
                 steps += "\n" + "the root of f(x) = " + str(x_r_new) + "\n"
