@@ -17,10 +17,13 @@
       <change beforePath="$PROJECT_DIR$/open_methods/FixedPoint.py" beforeDir="false" afterPath="$PROJECT_DIR$/open_methods/FixedPoint.py" afterDir="false" />
 =======
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
+=======
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/open_methods/Bisection.py" beforeDir="false" afterPath="$PROJECT_DIR$/open_methods/Bisection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/open_methods/NewtonRaphson.py" beforeDir="false" afterPath="$PROJECT_DIR$/open_methods/NewtonRaphson.py" afterDir="false" />
 >>>>>>> d46195725d2eb7c4ac8ae2470ac2211a0c43d882
+>>>>>>> adc384969243751f3561efc47e2ea46eeb2389af
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

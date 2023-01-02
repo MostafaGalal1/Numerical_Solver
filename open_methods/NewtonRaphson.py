@@ -17,25 +17,19 @@ class NewtonRaphson(AbstractMethod):
             dif = lambda x: eval(self.derivative)
             x0 = self.x_initial
             count = 1
-            lists = []
+            steps = ""
             while True:
-                list = []
                 x1 = self.service.apply_precision(x0 - f(x0) / dif(x0))
-                list.append(count)
-                list.append(x0)
-                list.append(x1)
-                list.append(f(x0))
-                list.append(f(x1))
-                list.append(x1-x0)
-                lists.append(list)
-                print("the value of the root in iteration " + str(count) + " is " + str(x1))
+                steps += "Iteration Number " + str(count) + ": \n"
+                steps += "xi = " + str(x1) + " | f(xi) = " + str(self.service.apply_precision(f(x1))) +"\n"
+                steps += "f'(xi) = " + str(self.service.apply_precision(dif(x1))) + " | relative_error = " + str(self.service.apply_precision(abs(x1-x0)/x1)) +"\n"
+                steps += "________________________________\n"
                 if (x0 != 0 and self.service.apply_precision(abs(x0 - x1)/x0) < self.epsilon) or (count >= self.max_iteration):
                     break
                 x0 = x1
                 count += 1
-            print(lists)
-            print("*********************************")
-            return lists
+            steps += "\n" + "the root of f(x) = " + str(x0) + "\n"
+            return steps
 
         except ZeroDivisionError:
             return "There is no solution"
