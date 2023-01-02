@@ -1,6 +1,4 @@
 from factories.abstract_method import AbstractMethod
-import math
-
 
 class Secant(AbstractMethod):
     def __init__(self, function, x_upper, x_lower, epsilon, iterations, service):
@@ -20,8 +18,8 @@ class Secant(AbstractMethod):
             x1 = self.x_upper
             while True:
                 list = []
-                x2 = self.service.apply_precision(x1 - self.service.apply_precision(f(x1) * (x1 - x0) / (f(x1) - f(x0))))
-                if (abs(x2 - x1) < self.epsilon) or (count >= self.max_iteration):
+                x2 = self.service.apply_precision(x1 - self.service.apply_precision(f(x1) * (x1 - x0) / self.service.apply_precision(f(x1) - f(x0))))
+                if (x2 != 0 and self.service.apply_precision(abs(x2 - x1)/x2) < self.epsilon) or (count >= self.max_iteration):
                     break
                 list.append(count)
                 list.append(x0)
@@ -37,5 +35,9 @@ class Secant(AbstractMethod):
                 count += 1
             print(lists)
             return lists
+
         except ZeroDivisionError:
             return "There is no solution"
+
+        except OverflowError:
+            return "Diverges!"

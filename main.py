@@ -371,8 +371,8 @@ class Ui_MainWindow(object):
         self.relative_error_spinbox.hide()
 
         self.non_info_label.setText(_translate("MainWindow", "Enter function like\n"
-                                                             "3x^2-4x+67\n"
-                                                             "7x^3-12x^2+67"))
+                                                             "3*x**2-4*x+67\n"
+                                                             "7*x**3-12*x**2+67"))
         self.non_info_label.setAlignment(QtCore.Qt.AlignCenter)
 
         self.fx_label.setText(_translate("MainWindow", "f(x):"))
@@ -606,7 +606,7 @@ class Ui_MainWindow(object):
         service = Service(self.precision_spinbox.value(), self.none_pivoting.isChecked(), self.partial_pivoting.isChecked()
                                                                                                     , self.complete_pivoting.isChecked())
         if self.main_combobox.currentText() == "LU-decomposition":
-            massage = GaussFactory(self.decomposition_combobox.currentText(), service, n, a, b, initial, self.epsilon,
+            message = GaussFactory(self.decomposition_combobox.currentText(), service, n, a, b, initial, self.epsilon,
                                      self.iterations).create().execute()
         else:
             message = GaussFactory(self.main_combobox.currentText(), service, n, a, b, initial, self.epsilon,
@@ -641,8 +641,8 @@ class Ui_MainWindow(object):
         service = Service(self.non_precision_spinbox.value())
         message = RootsFactory(self.non_main_combobox.currentText(), service, function, self.epsilon, self.iterations, xu, xl, x_initial, derivative).create().execute()
 
-
-        print(message)
+        self.non_result_label.setText(message)
+        self.non_result_label.adjustSize()
 
         self.non_scroll_area.resize(self.non_result_label.width(), self.non_result_label.height() + 5)
         MainWindow.setFixedHeight(self.non_scroll_area.height() + self.non_scroll_area.y() + 52)
