@@ -54,5 +54,3 @@ class Bisection(AbstractMethod):
         except ZeroDivisionError:
             return "There is no solution"
 
-        steps += "\n" + "the root of f(x) = " + str(x_r_new) + "\n"
-        return steps
