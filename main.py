@@ -4,8 +4,11 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QVBoxLayout
 import ctypes
+from symtable import *
+from sympy import *
 from gauss_methods.service import *
 from factories.gauss_methods_factory import *
+from factories.root_methods_factory import *
 
 my_app_id = "mycompany.myproduct.subproduct.version"
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(my_app_id)
@@ -484,6 +487,9 @@ class Ui_MainWindow(object):
         self.non_relative_error_spinbox.setValue(self.default_epsilon)
 
         if self.non_main_combobox.currentIndex() == 0 or self.non_main_combobox.currentIndex() == 1 or self.non_main_combobox.currentIndex() == 4:
+            self.fx_label.show()
+            self.fx_textbox.show()
+
             self.xl_label.show()
             self.xl_textbox.show()
 
@@ -499,6 +505,9 @@ class Ui_MainWindow(object):
             self.fdashx_label.hide()
             self.fdashx_textbox.hide()
         elif self.non_main_combobox.currentIndex() == 3:
+            self.fx_label.show()
+            self.fx_textbox.show()
+
             self.xl_label.hide()
             self.xl_textbox.hide()
 
@@ -514,6 +523,9 @@ class Ui_MainWindow(object):
             self.fdashx_label.show()
             self.fdashx_textbox.show()
         else:
+            self.fx_label.hide()
+            self.fx_textbox.hide()
+
             self.xl_label.hide()
             self.xl_textbox.hide()
 
@@ -596,16 +608,39 @@ class Ui_MainWindow(object):
             massage = GaussFactory(self.decomposition_combobox.currentText(), service, n, a, b, initial, self.epsilon,
                                      self.iterations).create().execute()
         else:
-            massage = GaussFactory(self.main_combobox.currentText(), service, n, a, b, initial, self.epsilon,
+            message = GaussFactory(self.main_combobox.currentText(), service, n, a, b, initial, self.epsilon,
                                      self.iterations).create().execute()
 
-        self.result_label.setText(massage + "\nTime taken: " + str(time.perf_counter() - start))
+        self.result_label.setText(message + "\nTime taken: " + str(time.perf_counter() - start))
         self.result_label.adjustSize()
         self.scroll_area.resize(self.result_label.width(), self.result_label.height() + 5)
         MainWindow.setFixedHeight(self.scroll_area.height() + self.scroll_area.y() + 52)
         MainWindow.resize(MainWindow.width(), self.scroll_area.height() + self.scroll_area.y() + 52)
 
     def solve_non_linear(self):
+        self.iterations = self.max_iteration_spinbox.value()
+        self.epsilon = self.relative_error_spinbox.value()
+
+        function = self.fx_textbox.toPlainText()
+        derivative = self.fdashx_textbox.toPlainText()
+        xl = self.xl_textbox.toPlainText() if  self.xl_textbox.toPlainText() else "0"
+        xu = self.xu_textbox.toPlainText() if  self.xu_textbox.toPlainText() else "0"
+        x_initial = self.xo_textbox.toPlainText() if  self.xo_textbox.toPlainText() else "0"
+
+        if self.non_main_combobox.currentText() == "Fixed point" :
+            function = self.gx_textbox.toPlainText()
+
+        if not function:
+            return
+
+        if self.non_main_combobox.currentText() == "Newton-Raphson" and not derivative:
+            x = Symbol('x')
+            derivative = str(Derivative(eval(function), x).doit())
+
+        service = Service(self.precision_spinbox.value())
+        message = RootsFactory(self.non_main_combobox.currentText(), service, function, self.epsilon, self.iterations, xu, xl, x_initial, derivative).create().execute()
+        print(message)
+
         self.non_scroll_area.resize(self.non_result_label.width(), self.non_result_label.height() + 5)
         MainWindow.setFixedHeight(self.non_scroll_area.height() + self.non_scroll_area.y() + 52)
         MainWindow.resize(MainWindow.width(), self.non_scroll_area.height() + self.non_scroll_area.y() + 52)

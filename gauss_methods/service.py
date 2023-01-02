@@ -3,7 +3,7 @@ import numpy as np
 
 class Service:
 
-    def __init__(self, precision, none_pivoting, partial_pivoting, complete_pivoting):
+    def __init__(self, precision, none_pivoting = None, partial_pivoting = None, complete_pivoting = None):
         self.precision = precision
         self.none_pivoting = none_pivoting
         self.partial_pivoting = partial_pivoting
