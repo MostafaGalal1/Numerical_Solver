@@ -624,11 +624,11 @@ class Ui_MainWindow(object):
 
         function = self.fx_textbox.toPlainText()
         derivative = self.fdashx_textbox.toPlainText()
-        xl = self.xl_textbox.toPlainText() if  self.xl_textbox.toPlainText() else "0"
-        xu = self.xu_textbox.toPlainText() if  self.xu_textbox.toPlainText() else "0"
-        x_initial = self.xo_textbox.toPlainText() if  self.xo_textbox.toPlainText() else "0"
+        xl = self.xl_textbox.toPlainText() if self.xl_textbox.toPlainText() else "0"
+        xu = self.xu_textbox.toPlainText() if self.xu_textbox.toPlainText() else "0"
+        x_initial = self.xo_textbox.toPlainText() if self.xo_textbox.toPlainText() else "0"
 
-        if self.non_main_combobox.currentText() == "Fixed point" :
+        if self.non_main_combobox.currentText() == "Fixed point":
             function = self.gx_textbox.toPlainText()
 
         if not function:
@@ -643,6 +643,44 @@ class Ui_MainWindow(object):
 
         self.non_result_label.setText(message)
         self.non_result_label.adjustSize()
+
+        x = np.arange(-10, 10, pow(10, -self.epsilon))
+
+        fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
+        ax.spines['left'].set_position('center')
+        ax.spines['bottom'].set_position('zero')
+        ax.spines['right'].set_color('none')
+        ax.spines['top'].set_color('none')
+
+        ax.xaxis.set_ticks_position('bottom')
+        ax.yaxis.set_ticks_position('left')
+
+        plt.title("Function Plot")
+        if self.non_main_combobox.currentText() == "Fixed point":
+            y = eval(function.replace("cos", "np.cos").replace("sin", "np.sin").replace("tan", "np.tan").replace("sqrt","np.sqrt").replace("exp", "np.exp"))
+            y2 = eval("x")
+            plt.plot(x, y, color="red", label="f(x)")
+            plt.plot(x, y2, color="blue", label="f'(x)")
+        elif self.non_main_combobox.currentText() == "Newton-Raphson":
+            y = eval(function.replace("cos", "np.cos").replace("sin", "np.sin").replace("tan", "np.tan").replace(
+                "sqrt", "np.sqrt").replace("exp", "np.exp"))
+            y2 = eval(derivative.replace("cos","np.cos").replace("sin","np.sin").replace("tan","np.tan").replace("sqrt","np.sqrt").replace("exp","np.exp"))
+            plt.plot(x, y, color="red", label="f(x)")
+            plt.plot(x, y2, color="blue", label="f'(x)")
+        elif self.non_main_combobox.currentText() == "Secant method":
+            y = eval(function.replace("cos", "np.cos").replace("sin", "np.sin").replace("tan", "np.tan").replace("sqrt", "np.sqrt").replace("exp", "np.exp"))
+            plt.plot(x, y, color="red", label="f(x)")
+        else:
+            y = eval(function.replace("cos", "np.cos").replace("sin", "np.sin").replace("tan", "np.tan").replace(
+                "sqrt", "np.sqrt").replace("exp", "np.exp"))
+            plt.plot(x, y, color="red", label="f(x)")
+            xlAxis = eval(xl)
+            plt.axvline(x = xlAxis, color="blue", label="f(x)")
+            xuAxis = eval(xu)
+            plt.axvline(x = xuAxis, color="green", label="f(x)")
+
+        plt.show()
 
         self.non_scroll_area.resize(self.non_result_label.width(), self.non_result_label.height() + 5)
         MainWindow.setFixedHeight(self.non_scroll_area.height() + self.non_scroll_area.y() + 52)

@@ -10,7 +10,7 @@ class RootsFactory:
         self.method = method.lower()
         self.service = service
         self.function = function.replace("cos","math.cos").replace("sin","math.sin").replace("tan","math.tan").replace("sqrt","math.sqrt").replace("exp","math.exp")  # should be string   the string of function should be like " x**2 + math.sin(x) "
-        self.derivative = derivative.replace("cos","math.cos").replace("sin","math.sin").replace("exp","math.exp")  # should be string   the string of function should be like " x**2 + math.sin(x) "
+        self.derivative = derivative.replace("cos","math.cos").replace("sin","math.sin").replace("tan","math.tan").replace("sqrt","math.sqrt").replace("exp","math.exp")  # should be string   the string of function should be like " x**2 + math.sin(x) "
         self.x_upper = float(x_upper)    # should be float
         self.x_lower = float(x_lower)    # should be float
         self.x_initial = float(x_initial)    # should be float
