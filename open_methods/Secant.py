@@ -18,13 +18,13 @@ class Secant(AbstractMethod):
             steps = ""
             while True:
                 x2 = self.service.apply_precision(x1 - self.service.apply_precision(f(x1) * (x1 - x0) / self.service.apply_precision(f(x1) - f(x0))))
-                if (x2 != 0 and self.service.apply_precision(abs(x2 - x1)/x2) < self.epsilon) or (count >= self.max_iteration):
-                    break
                 steps += "Iteration Number " + str(count) + ": \n"
                 steps += "Xi-1 = " + str(x0) + " | Xi = " + str(x1) + "\n"
                 steps += "f(Xi-1) = " + str(self.service.apply_precision(f(x0))) + " | f(Xi) = " + str(self.service.apply_precision(f(x1))) + "\n"
                 steps += "relative_error = " + str(self.service.apply_precision(abs(x1-x0)/x1)) + "\n"
                 steps += "________________________________\n"
+                if (x2 != 0 and self.service.apply_precision(abs(x2 - x1)/x2) < self.epsilon) or (count >= self.max_iteration):
+                    break
                 x0 = x1
                 x1 = x2
                 count += 1

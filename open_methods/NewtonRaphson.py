@@ -24,7 +24,7 @@ class NewtonRaphson(AbstractMethod):
                 steps += "xi = " + str(x1) + " | f(xi) = " + str(self.service.apply_precision(f(x1))) +"\n"
                 steps += "f'(xi) = " + str(self.service.apply_precision(dif(x1))) + " | relative_error = " + str(self.service.apply_precision(abs(x1-x0)/x1)) +"\n"
                 steps += "________________________________\n"
-                if (x0 != 0 and self.service.apply_precision(abs(x0 - x1)/x0) < self.epsilon) or (count >= self.max_iteration):
+                if (x1 != 0 and self.service.apply_precision(abs(x1 - x0)/x1) < self.epsilon) or (count >= self.max_iteration):
                     break
                 x0 = x1
                 count += 1
