@@ -655,7 +655,8 @@ class Ui_MainWindow(object):
 
         ax.xaxis.set_ticks_position('bottom')
         ax.yaxis.set_ticks_position('left')
-
+        ax = plt.gca()
+        ax.set_ylim([-100, 100])
         plt.title("Function Plot")
         if self.non_main_combobox.currentText() == "Fixed point":
             y = eval(function.replace("cos", "np.cos").replace("sin", "np.sin").replace("tan", "np.tan").replace("sqrt","np.sqrt").replace("exp", "np.exp"))
