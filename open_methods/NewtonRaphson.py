@@ -29,12 +29,16 @@ class NewtonRaphson(AbstractMethod):
                 list.append(x1-x0)
                 lists.append(list)
                 print("the value of the root in iteration " + str(count) + " is " + str(x1))
-                if (abs(x0 - x1) <= self.epsilon) or (count >= self.max_iteration):
+                if (x0 != 0 and self.service.apply_precision(abs(x0 - x1)/x0) < self.epsilon) or (count >= self.max_iteration):
                     break
                 x0 = x1
                 count += 1
             print(lists)
             print("*********************************")
             return lists
+
         except ZeroDivisionError:
             return "There is no solution"
+
+        except OverflowError:
+            return "Diverges!"

@@ -13,27 +13,33 @@ class FixedPoint(AbstractMethod):
     def execute(self):
         try:
             g = lambda x: eval(self.function)  # this is the function
-            absolute_error = 0
+            relative_error = 0
             iteration = 0
             x_old = self.x_initial
             x_new = 0
+
             steps = ""
             while iteration < self.max_iteration:
                 iteration += 1
                 x_new = self.service.apply_precision(g(x_old))
                 steps += "Iteration Number " + str(iteration) + ": \n"
                 steps += "x_i = " + str(x_new) + " | x_i+1 = " + str(x_old) + "\n"
-                try:
-                    absolute_error = self.service.apply_precision(abs(x_new - x_old) / abs(x_new))
-                    steps += "absolute_error = " + str(absolute_error) + "\n"
-                except ZeroDivisionError:
-                    steps += "absolute_error = ----" + "\n"
+                if x_new != 0:
+                    relative_error = self.service.apply_precision(abs((x_new - x_old) / x_new))
+                    steps += "relative_error = " + str(relative_error) + "\n"
+                else:
+                    steps += "relative_error = ----" + "\n"
                 steps += "________________________________\n"
-                if abs(x_new - x_old) <= self.epsilon:   # epsilon is the number of digits
+                if relative_error <= self.epsilon:   # epsilon is the number of digits
                     steps += "\n" + "the root of f(x) = " + str(x_new) + "\n"
                     return steps
+                x_old = x_new
+
         except ZeroDivisionError:
             return "There is no solution"
+
+        except OverflowError:
+            return "Diverges!"
 
         steps += "\n" + "the root of f(x) = " + str(x_new) + "\n"
         return steps
