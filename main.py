@@ -3,6 +3,7 @@ import time
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QVBoxLayout
+import matplotlib.pyplot as plt
 import ctypes
 from symtable import *
 from sympy import *
@@ -338,7 +339,7 @@ class Ui_MainWindow(object):
         self.max_iteration_spinbox.setMaximum(99)
         self.max_iteration_spinbox.setMinimum(2)
 
-        self.relative_error_spinbox.setMaximum(8)
+        self.relative_error_spinbox.setMaximum(12)
         self.relative_error_spinbox.setMinimum(1)
 
         self.precision_spinbox.setValue(self.default_precision)
@@ -392,7 +393,7 @@ class Ui_MainWindow(object):
         self.non_max_iteration_spinbox.setMaximum(99)
         self.non_max_iteration_spinbox.setMinimum(2)
 
-        self.non_relative_error_spinbox.setMaximum(8)
+        self.non_relative_error_spinbox.setMaximum(12)
         self.non_relative_error_spinbox.setMinimum(1)
 
         self.non_precision_spinbox.setValue(self.default_precision)
@@ -618,8 +619,8 @@ class Ui_MainWindow(object):
         MainWindow.resize(MainWindow.width(), self.scroll_area.height() + self.scroll_area.y() + 52)
 
     def solve_non_linear(self):
-        self.iterations = self.max_iteration_spinbox.value()
-        self.epsilon = self.relative_error_spinbox.value()
+        self.iterations = self.non_max_iteration_spinbox.value()
+        self.epsilon = self.non_relative_error_spinbox.value()
 
         function = self.fx_textbox.toPlainText()
         derivative = self.fdashx_textbox.toPlainText()
@@ -637,8 +638,10 @@ class Ui_MainWindow(object):
             x = Symbol('x')
             derivative = str(Derivative(eval(function), x).doit())
 
-        service = Service(self.precision_spinbox.value())
+        service = Service(self.non_precision_spinbox.value())
         message = RootsFactory(self.non_main_combobox.currentText(), service, function, self.epsilon, self.iterations, xu, xl, x_initial, derivative).create().execute()
+
+
         print(message)
 
         self.non_scroll_area.resize(self.non_result_label.width(), self.non_result_label.height() + 5)

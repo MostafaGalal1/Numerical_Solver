@@ -9,7 +9,7 @@ class RootsFactory:
    def __init__(self, method, service, function, epsilon = 0.00001, iterations = 50, x_upper=None, x_lower=None, x_initial=None, derivative=""):
         self.method = method.lower()
         self.service = service
-        self.function = function.replace("cos","math.cos").replace("sin","math.sin").replace("exp","math.exp")  # should be string   the string of function should be like " x**2 + math.sin(x) "
+        self.function = function.replace("cos","math.cos").replace("sin","math.sin").replace("tan","math.tan").replace("sqrt","math.sqrt").replace("exp","math.exp")  # should be string   the string of function should be like " x**2 + math.sin(x) "
         self.derivative = derivative.replace("cos","math.cos").replace("sin","math.sin").replace("exp","math.exp")  # should be string   the string of function should be like " x**2 + math.sin(x) "
         self.x_upper = float(x_upper)    # should be float
         self.x_lower = float(x_lower)    # should be float

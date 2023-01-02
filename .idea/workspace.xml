@@ -5,17 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e964601d-1dcd-4211-8a39-b21b593a64fd" name="Changes" comment="bracketing and open methods">
-      <change afterPath="$PROJECT_DIR$/open_methods/NewtonRaphson.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/open_methods/Secant.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/Numerical_Solver.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Numerical_Solver.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bracketing and open methods/Bisection.py" beforeDir="false" afterPath="$PROJECT_DIR$/open_methods/Bisection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bracketing and open methods/False Position.py" beforeDir="false" afterPath="$PROJECT_DIR$/open_methods/FalsePosition.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bracketing and open methods/Fixed Point.py" beforeDir="false" afterPath="$PROJECT_DIR$/open_methods/FixedPoint.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/factories/root_methods_factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/factories/root_methods_factory.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gauss_methods/service.py" beforeDir="false" afterPath="$PROJECT_DIR$/gauss_methods/service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/open_methods/Bisection.py" beforeDir="false" afterPath="$PROJECT_DIR$/open_methods/Bisection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/open_methods/FalsePosition.py" beforeDir="false" afterPath="$PROJECT_DIR$/open_methods/FalsePosition.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/open_methods/FixedPoint.py" beforeDir="false" afterPath="$PROJECT_DIR$/open_methods/FixedPoint.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +43,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/pc/OneDrive-AlexandriaUniversity/Documents/GitHub/SimpleFSDB/src/model/row.py",
+    "last_opened_file_path": "C:/Users/mosta/OneDrive/Desktop/New folder/j/numerical_solver/open_methods",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -54,7 +52,12 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Python.NewtonRasphon">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\mosta\OneDrive\Desktop\New folder\j\numerical_solver\open_methods" />
+    </key>
+  </component>
+  <component name="RunManager">
     <configuration name="NewtonRasphon" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Numerical_Solver" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -150,5 +153,21 @@
     <MESSAGE value="Zero Division in gauss seidel and jacobi" />
     <MESSAGE value="bracketing and open methods" />
     <option name="LAST_COMMIT_MESSAGE" value="bracketing and open methods" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/open_methods/FixedPoint.py</url>
+          <line>14</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/open_methods/Bisection.py</url>
+          <line>15</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

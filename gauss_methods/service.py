@@ -10,8 +10,7 @@ class Service:
         self.complete_pivoting = complete_pivoting
 
     def apply_precision(self, num):
-        return float(
-            np.format_float_positional(num, precision=self.precision, unique=False, fractional=False, trim='k'))
+        return float(np.format_float_positional(num, precision=self.precision+1, unique=False, fractional=False, trim='k'))
 
     @staticmethod
     def partial_pivoting(n, a, b, k):
